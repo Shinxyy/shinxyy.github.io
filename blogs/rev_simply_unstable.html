@@ -74,7 +74,8 @@
         }
 
         .highlight {
-            color: #ff8c00;
+            color: #ffffff;
+            font-weight: bold;
         }
 
         footer {
@@ -87,18 +88,16 @@
 </head>
 <body>
     <header>
-        <h1>Simply Unstable</h1>
-        <h2>Reversing Challenge Writeup</h2>
+        <h1>Writeup - Simply Unstable</h1>
     </header>
 
     <section class="section">
         <h3>Challenge Details</h3>
-        <p><span class="highlight">Author:</span> Patrick</p>
+        <p><span class="highlight">Author:</span> Patrick Kuin</p>
         <p><span class="highlight">Category:</span> Reversing</p>
-        <p><span class="highlight">Platform:</span> Studsec</p>
-        <p>This is a reversing challenge from the Studsec team at VU.</p>
+        <p><span class="highlight">Platform:</span> StudSec CTF Platform</p>
         <p><span class="highlight">Binary Information:</span> <code>ELF, Not Stripped, X86_64</code></p>
-        <p>We’ll open the binary in Ghidra (disassembler) and analyze it.</p>
+        <p>I will open the binary in Ghidra (disassembler) and analyze it.</p>
     </section>
 
     <section class="section">
@@ -161,9 +160,9 @@
     <section class="section">
         <h3>Gathering Initial Value of .secret</h3>
         <pre><code>pwndbg&gt; info files
-Symbols from "/home/kali/Documents/studesec/simply_unstable/Handout/challenge".
+Symbols from "/home/kali/Documents/studsec/simply_unstable/Handout/challenge".
 Local exec file:
-    `/home/kali/Documents/studesec/simply_unstable/Handout/challenge', file type elf64-x86-64.
+    `/home/kali/Documents/studsec/simply_unstable/Handout/challenge', file type elf64-x86-64.
     . . .
     0x0000555555558020 - 0x0000555555558082 is .secret</code></pre>
     </section>
