@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simply Unstable - Reversing Challenge Writeup</title>
+    <style>
+        /* Basic reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Dark mode theme */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        h1, h2, h3 {
+            color: #00bcd4;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            margin-top: 20px;
+        }
+
+        h3 {
+            font-size: 1.4em;
+            margin-top: 15px;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            color: #cccccc;
+            text-align: justify;
+        }
+
+        code {
+            background-color: #1e1e1e;
+            color: #00ff9d;
+            padding: 3px 5px;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        pre {
+            background-color: #1e1e1e;
+            color: #00ff9d;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin-top: 10px;
+            font-size: 1em;
+        }
+
+        .section {
+            margin-top: 20px;
+        }
+
+        .highlight {
+            color: #ff8c00;
+        }
+
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Simply Unstable</h1>
+        <h2>Reversing Challenge Writeup</h2>
+    </header>
+
+    <section class="section">
+        <h3>Challenge Details</h3>
+        <p><span class="highlight">Author:</span> Patrick</p>
+        <p><span class="highlight">Category:</span> Reversing</p>
+        <p><span class="highlight">Platform:</span> Studsec</p>
+        <p>This is a reversing challenge from the Studsec team at VU.</p>
+        <p><span class="highlight">Binary Information:</span> <code>ELF, Not Stripped, X86_64</code></p>
+        <p>We’ll open the binary in Ghidra (disassembler) and analyze it.</p>
+    </section>
+
+    <section class="section">
+        <h3>Main Function</h3>
+        <pre><code>undefined8 main(int param_1,undefined8 *param_2,undefined8 param_3,uchar *param_4,size_t param_5) {
+  undefined8 uVar1;
+  ulong uVar2;
+  size_t *outlen;
+  uchar *out;
+
+  if (param_1 &lt; 2) {
+    printf("Usage: %s hex_key",*param_2);
+    uVar1 = 1;
+  } else {
+    out = (uchar *)0x0;
+    uVar2 = strtol((char *)param_2[1],(char **)0x0,0x10);
+    decrypt((EVP_PKEY_CTX *)(uVar2 &amp; 0xffffffff),out,outlen,param_4,param_5);
+
+    if (flag_ciphertext == -0x1a76b7ab) {
+      (*(code *)&flag_ciphertext)();
+      putchar(10);
+    } else {
+      puts("Invalid key");
+    }
+    uVar1 = 0;
+  }
+  return uVar1;
+}</code></pre>
+    </section>
+
+    <section class="section">
+        <h3>Decrypt Function</h3>
+        <pre><code>int decrypt(EVP_PKEY_CTX *ctx,uchar *out,size_t *outlen,uchar *in,size_t inlen) {
+  int iVar1;
+  long lVar2;
+  uint local_28;
+
+  lVar2 = sysconf(0x1e);
+  iVar1 = mprotect((void *)(-lVar2 &amp; 0x104020U),(long)(0x104020 - (int)(void *)(-lVar2 &amp; 0x104020U)),7);
+  
+  if (iVar1 &lt; 0) {
+    perror("mprotect:");
+  }
+  
+  for (local_28 = 0; local_28 &lt; 0x18; local_28 = local_28 + 1) {
+    (&amp;flag_ciphertext)[(int)local_28] = (&amp;flag_ciphertext)[(int)local_28] ^ (uint)ctx;
+  }
+  
+  return local_28;
+}</code></pre>
+    </section>
+
+    <section class="section">
+        <h3>Solution Approach</h3>
+        <p>To solve this challenge, we need to XOR the initial value of <code>.secret</code> with the target value:</p>
+        <p>Initial value of <code>.secret</code> (24 bytes): <code>0x413c8c81</code></p>
+        <p>Target value: <code>0xe5894855</code></p>
+    </section>
+
+    <section class="section">
+        <h3>Gathering Initial Value of .secret</h3>
+        <pre><code>pwndbg&gt; info files
+Symbols from "/home/kali/Documents/studesec/simply_unstable/Handout/challenge".
+Local exec file:
+    `/home/kali/Documents/studesec/simply_unstable/Handout/challenge', file type elf64-x86-64.
+    . . .
+    0x0000555555558020 - 0x0000555555558082 is .secret</code></pre>
+    </section>
+
+    <section class="section">
+        <h3>XOR Calculation</h3>
+        <p>Using the first 24 bytes from <code>.secret</code>:</p>
+        <pre><code>pwndbg&gt; x/24xb 0x0000555555558020
+0x555555558020 &lt;flag_ciphertext&gt;:    0x81    0x8c    0x3c    0x41    0x9c    0x49    0xe0    0x44
+0x555555558028 &lt;flag_ciphertext+8&gt;:    0x9c    0x4d    0x62    0xec    0x6d    0x85    0xf4    0xe5
+0x555555558030 &lt;flag_ciphertext+16&gt;:    0x95    0x85    0xf4    0xe5    0x95    0x8c    0x0d    0xa6</code></pre>
+        
+        <p>With endianness, we format it as: <code>0x413c8c81</code></p>
+
+        <h3>Final XOR Calculation Script</h3>
+        <pre><code>initial_value = 0x413c8c81
+target_value = 0xe5894855
+X = initial_value ^ target_value
+print(f"X should be: {hex(X)}")</code></pre>
+        
+        <p>The calculated value from the script: <code>0xa4b5c4d4</code></p>
+        <p>Testing the value:</p>
+        <pre><code>./challenge 0xa4b5c4d4</code></pre>
+        <p>Flag obtained: <code>CTF{c0de_b3_unst@ble}</code></p>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Simply Unstable Writeup. All rights reserved.</p>
+    </footer>
+</body>
+</html>
