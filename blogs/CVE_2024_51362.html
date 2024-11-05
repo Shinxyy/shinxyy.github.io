@@ -6,34 +6,41 @@
     <meta name="description" content="Detailed report on CVE discovered in an action camera">
     <title>CVE-2024-51362</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+
 </head>
-<body>
+<bo>
     <header>
         <h1>CVE-2024-51362</h1>
     </header>
     
     <section>
-        <h2>Introduction</h2>
+        <h2 id="introduction">Introduction</h2>
         <p>
-            Welcome to our latest blog post! In this article, we will discuss a critical vulnerability discovered in a popular action camera. This vulnerability has been assigned the Common Vulnerabilities and Exposures (CVE) identifier <strong>CVE-2024-51362</strong>.
+            <strong>Vulnerability Type:</strong> Incorrect Access Control<br>
+            <strong>Affected Product Code Base:</strong> Indoor IP Camera - V7.6.32<br>
+            <strong>Affected Component:</strong> RTSP Protocol, Port 8554, Authentication Mechanism<br>
+            <strong>Vendor:</strong> LSC Smart Connect<br>
+            <strong>CVSS:</strong> 6.5 medium <i>(CVSS:3.1/AV:A/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N)</i><br><br>
+            In this article, we’ll discuss a critical vulnerability discovered in a popular IP camera that we purchased from Action. This vulnerability has been assigned the Common Vulnerabilities and Exposures (CVE) identifier <strong>CVE-2024-51362</strong>.
         </p>
+        <img src="../images/lsc-smart-camera.png" alt="LSC Smart Indoor IP-camera">
     </section>
 
     <section>
-        <h2>Overview of the Vulnerability</h2>
+        <h2 id="summary">Summary</h2>
         <p>
-            In this article, we dive into the details of a newly discovered vulnerability in an action camera, identified as <strong>CVE-XXXX-YYYY</strong>. This vulnerability impacts the device's firmware, potentially allowing unauthorized access and remote code execution.
-        </p>
-    </section>
+            A recently discovered vulnerability in the LSC Smart Connect Indoor IP Camera could allow unauthorized access to live camera footage if the camera is connected to an insecure network. This issue exposes users to privacy risks, as malicious actors can view the camera’s live feed without any credentials.        </p>
+        </section>
 
     <section>
-        <h2>Technical Details</h2>
+        <h2 id="technical-detail">Technical Details</h2>
         <p>
-            The vulnerability lies in the camera's firmware update mechanism, which fails to validate the integrity of downloaded firmware images. This makes it possible for attackers to intercept the update process and inject malicious code.
-        </p>
+            The vulnerability arises from an exposed RTSP (Real-Time Streaming Protocol) port, specifically port 8554, which allows remote access to the camera feed. Typically, users would only access the camera through the LSC Smart Home app, and nowhere in the product’s documentation does it mention the availability of the RTSP feed on this port. This means that many users are likely unaware of the risk, as they rely on the app for control and access.        </p>
+            
+            RTSP is commonly used for streaming video feeds, and it requires authentication to prevent unauthorized access. However, in this case, the LSC Smart Connect Indoor IP Camera does not enforce any authentication on this port, allowing anyone on the same network as the device to view its live footage without restrictions.
         <pre>
-// bruteforce script for the RTSP protocol running on port xxxx 
-
+<code id="bruteforce-code" class="language-py dark-theme"># bruteforce script the directory for the rtsp stream 
 import cv2
 import argparse
 import socket
@@ -92,7 +99,7 @@ def bf(ip_address, port, file):
     
 
 def main():
-    parser = argparse.ArgumentParser(description="Real Time Streaming Protocol (RTSP) Bruteforce")
+    parser = argparse.ArgumentParser(description="Real Time Streaming Protocol (RTSP) Bruteforce directory script")
     parser.add_argument("-ip", "--ip_address", type=str, required=True, help="the IP address")
     parser.add_argument("-p", "--port", type=int, required=True, help="the port")
     parser.add_argument("-f", "--file", type=str, required=True, help="path to file")
@@ -102,26 +109,34 @@ def main():
 
 if __name__ == "__main__":
     main()
-        </pre>
+</code></pre>
     </section>
 
     <section>
-        <h2>Impact</h2>
+        <h2 id="impact">Impact</h2>
         <p>
-            If exploited, this vulnerability could allow attackers to gain complete control over the device, access sensitive footage, or even use the camera as a foothold in a broader network attack.
+            If exploited, this vulnerability could allow attackers to gain unauthorized access to live video feeds from the affected camera. This could be used for various malicious purposes, including spying on individuals, monitoring private spaces, or conducting surveillance operations. The potential impact of this vulnerability is significant, as it compromises the privacy and security of users who rely on these cameras for monitoring and surveillance purposes.
         </p>
     </section>
 
     <section>
-        <h2>Mitigation Steps</h2>
+        <h2 id="mitigation">Mitigation Steps</h2>
+        Users are advised to avoid connecting the camera to untrusted networks. Additionally, users should take the following steps to mitigate the risk of unauthorized access to the camera feed:
         <p>
-            Users are advised to avoid connecting the camera to untrusted networks and to apply firmware updates from the manufacturer's official website. Developers are urged to implement secure firmware update mechanisms, such as digital signature verification.
+            <ul>
+                <li><strong>Secure Your Network:</strong> Ensure that your Wi-Fi network is protected with a strong password, and avoid sharing network access with untrusted devices or individuals.</li>
+                <li><strong>Separate the Camera: </strong> If possible, connect the camera to a dedicated Wi-Fi network isolated from other devices. This helps contain potential security risks by limiting access to the camera’s network.</li>
+                <li><strong>Monitor for Updates:</strong> Keep the camera firmware updated and watch for any patches from LSC Smart Connect that may address this security flaw.</li>
+            </ul>
+            
         </p>
     </section>
 
     <footer>
-        <p>Written by: Patrick Kuin and Twan Terstappen</p>
+        <p>Written by: Patrick Kuin, Twan Terstappen and Teun van der ploeg</p>
         <p>&copy; 2024</p>
     </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-python.min.js"></script>
 </body>
 </html>
