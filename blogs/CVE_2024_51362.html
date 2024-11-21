@@ -41,6 +41,7 @@
             RTSP is commonly used for streaming video feeds, and it requires authentication to prevent unauthorized access. However, in this case, the LSC Smart Connect Indoor IP Camera does not enforce any authentication on this port, allowing anyone on the same network as the device to view its live footage without restrictions.
         <pre>
 <code id="bruteforce-code" class="language-py dark-theme"># bruteforce script the directory for the rtsp stream 
+# The input file is a list of directories to try, you could use a wordlist from seclists
 import cv2
 import argparse
 import socket
