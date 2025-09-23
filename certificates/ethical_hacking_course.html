@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethical Hacking Course Certificate | Cybersecurity Portfolio</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .certificate-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #111;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.2);
+        }
+        
+        .certificate-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #00d9ff;
+        }
+        
+        .certificate-title {
+            font-size: 2.5rem;
+            color: #00d9ff;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+        }
+        
+        .certificate-subtitle {
+            font-size: 1.2rem;
+            color: #66ff66;
+            margin-bottom: 2rem;
+        }
+        
+        .certificate-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .meta-item {
+            background: rgba(0, 217, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 1px solid #00d9ff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .certificate-image-container {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: rgba(0, 217, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+        
+        .certificate-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .certificate-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .udemy-badge {
+            background: linear-gradient(45deg, #ec5252, #a435f0);
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 1rem 0;
+        }
+        
+        .certificate-content {
+            line-height: 1.8;
+            color: #ccc;
+        }
+        
+        .certificate-content h2 {
+            color: #00d9ff;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+        }
+        
+        .certificate-content h3 {
+            color: #66ff66;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .skill-category {
+            background: rgba(0, 217, 255, 0.05);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .skill-category:hover {
+            border-color: rgba(0, 217, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .skill-category h4 {
+            color: #00d9ff;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .skill-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .skill-list li {
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #222;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .skill-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .skill-list li i {
+            color: #00d9ff;
+            width: 16px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            font-weight: bold;
+            display: block;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .credential-box {
+            background: rgba(236, 82, 82, 0.1);
+            border: 2px solid #ec5252;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .credential-id {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            color: #ec5252;
+            margin: 1rem 0;
+            letter-spacing: 2px;
+        }
+        
+        .verify-btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #ec5252, #a435f0);
+            color: #fff;
+            padding: 0.8rem 2rem;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin: 1rem 0.5rem;
+        }
+        
+        .verify-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(236, 82, 82, 0.4);
+        }
+        
+        .navigation {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #333;
+            text-align: center;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #00d9ff, #0099cc);
+            color: #000;
+            padding: 0.8rem 2rem;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 217, 255, 0.4);
+        }
+        
+        .highlight-box {
+            background: rgba(255, 165, 0, 0.1);
+            border: 1px solid #ffa500;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: #ffa500;
+        }
+        
+        .highlight-box i {
+            margin-right: 0.5rem;
+        }
+        
+        .course-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .feature-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .feature-icon {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .udemy-orange {
+            color: #ec5252;
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-rain"></div>
+    
+    <div class="certificate-container">
+        <div class="certificate-header">
+            <h1 class="certificate-title">The Complete Ethical Hacking Course</h1>
+            <p class="certificate-subtitle">Beginner to Advanced Cybersecurity Training</p>
+            <div class="udemy-badge">
+                <i class="fas fa-graduation-cap"></i> Udemy Certificate
+            </div>
+            
+            <div class="certificate-meta">
+                <div class="meta-item">
+                    <i class="fas fa-calendar"></i>
+                    <span>Completed: April 2021</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Duration: 24.5 Hours</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-users"></i>
+                    <span>290,445 Students</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-star"></i>
+                    <span>Rating: 4.0/5</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="certificate-image-container">
+            <img src="../static/cert_ethical_hacker.jpg" alt="Ethical Hacking Course Certificate" class="certificate-image">
+        </div>
+        
+        <div class="certificate-content">
+            <h2><i class="fas fa-info-circle"></i> About This Course</h2>
+            <p>
+                This comprehensive ethical hacking course provided foundational knowledge in cybersecurity, 
+                penetration testing, and ethical hacking methodologies. The course covered everything from 
+                basic security concepts to advanced penetration testing techniques using Kali Linux.
+            </p>
+            
+            <div class="highlight-box">
+                <i class="fas fa-shield-alt"></i>
+                <strong>Foundation Course:</strong> This was one of my first formal cybersecurity courses, 
+                providing the essential knowledge that launched my career in ethical hacking and penetration testing.
+            </div>
+            
+            <h2><i class="fas fa-chart-bar"></i> Course Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">24.5</span>
+                    <span class="stat-label">Hours of Content</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">290K+</span>
+                    <span class="stat-label">Students Enrolled</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">4.0/5</span>
+                    <span class="stat-label">Course Rating</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">29,741</span>
+                    <span class="stat-label">Total Reviews</span>
+                </div>
+            </div>
+            
+            <h2><i class="fas fa-list-check"></i> Course Features</h2>
+            <div class="course-features">
+                <div class="feature-item">
+                    <i class="fas fa-video feature-icon"></i>
+                    <span>24.5 hours on-demand video</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-download feature-icon"></i>
+                    <span>4 downloadable resources</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-mobile-alt feature-icon"></i>
+                    <span>Access on mobile and TV</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-infinity feature-icon"></i>
+                    <span>Full lifetime access</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-certificate feature-icon"></i>
+                    <span>Certificate of completion</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-shield-alt feature-icon"></i>
+                    <span>30-Day Money-Back Guarantee</span>
+                </div>
+            </div>
+            
+            <h2><i class="fas fa-brain"></i> Skills & Knowledge Acquired</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h4><i class="fas fa-search"></i> Reconnaissance & Information Gathering</h4>
+                    <ul class="skill-list">
+                        <li><i class="fas fa-dot-circle"></i> Network scanning with Nmap</li>
+                        <li><i class="fas fa-dot-circle"></i> Vulnerability assessment</li>
+                        <li><i class="fas fa-dot-circle"></i> OSINT techniques</li>
+                        <li><i class="fas fa-dot-circle"></i> Target enumeration</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <h4><i class="fas fa-wifi"></i> Network Security & WiFi Hacking</h4>
+                    <ul class="skill-list">
+                        <li><i class="fas fa-dot-circle"></i> WiFi security protocols</li>
+                        <li><i class="fas fa-dot-circle"></i> WEP/WPA/WPA2 attacks</li>
+                        <li><i class="fas fa-dot-circle"></i> Wireless penetration testing</li>
+                        <li><i class="fas fa-dot-circle"></i> Network traffic analysis</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <h4><i class="fas fa-globe"></i> Web Application Security</h4>
+                    <ul class="skill-list">
+                        <li><i class="fas fa-dot-circle"></i> OWASP Top 10 vulnerabilities</li>
+                        <li><i class="fas fa-dot-circle"></i> SQL injection techniques</li>
+                        <li><i class="fas fa-dot-circle"></i> Cross-site scripting (XSS)</li>
+                        <li><i class="fas fa-dot-circle"></i> Web application testing</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <h4><i class="fas fa-linux"></i> Kali Linux & Tools</h4>
+                    <ul class="skill-list">
+                        <li><i class="fas fa-dot-circle"></i> Kali Linux environment setup</li>
+                        <li><i class="fas fa-dot-circle"></i> Metasploit framework</li>
+                        <li><i class="fas fa-dot-circle"></i> Burp Suite basics</li>
+                        <li><i class="fas fa-dot-circle"></i> Command line proficiency</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <h4><i class="fas fa-key"></i> Password Security & Cryptography</h4>
+                    <ul class="skill-list">
+                        <li><i class="fas fa-dot-circle"></i> Password cracking techniques</li>
+                        <li><i class="fas fa-dot-circle"></i> Hash analysis</li>
+                        <li><i class="fas fa-dot-circle"></i> Encryption fundamentals</li>
+                        <li><i class="fas fa-dot-circle"></i> Brute force attacks</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <h4><i class="fas fa-user-secret"></i> Anonymity & Privacy</h4>
+                    <ul class="skill-list">
+                        <li><i class="fas fa-dot-circle"></i> VPN and proxy usage</li>
+                        <li><i class="fas fa-dot-circle"></i> Tor network navigation</li>
+                        <li><i class="fas fa-dot-circle"></i> Anonymous communication</li>
+                        <li><i class="fas fa-dot-circle"></i> Digital footprint reduction</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h2><i class="fas fa-graduation-cap"></i> Learning Outcomes</h2>
+            <p>Upon completion of this course, I gained the ability to:</p>
+            <ul>
+                <li><strong>Perform comprehensive penetration testing</strong> on networks and web applications</li>
+                <li><strong>Secure and protect networks</strong> from hackers and data loss</li>
+                <li><strong>Build virtual hacking environments</strong> using VirtualBox</li>
+                <li><strong>Attack networks ethically</strong> and identify vulnerabilities</li>
+                <li><strong>Break passwords</strong> using various techniques and tools</li>
+                <li><strong>Remain anonymous</strong> during penetration testing activities</li>
+            </ul>
+            
+            <div class="credential-box">
+                <h3><i class="fas fa-id-card"></i> Certificate Credentials</h3>
+                <p><strong>Course Title:</strong> The Complete Ethical Hacking Course: Beginner to Advanced!</p>
+                <div class="credential-id">Certificate ID: UC-43834177-8c91-4f2a-97f5-ce83cfa2a373</div>
+                <p><strong>Completion Date:</strong> April 2021</p>
+                <p><strong>Course Duration:</strong> 24.5 hours</p>
+                <p><strong>Platform:</strong> Udemy</p>
+                <p><strong>Instructor Rating:</strong> 4.0/5 (29,741 reviews)</p>
+                
+                <a href="https://www.udemy.com/certificate/UC-f3834177-8c91-4f2a-97f5-ce83cfa2a373/" class="verify-btn" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> View Certificate
+                </a>
+                <a href="https://www.udemy.com/course/penetration-testing/" class="verify-btn" target="_blank">
+                    <i class="fas fa-book"></i> View Course
+                </a>
+            </div>
+            
+            <h2><i class="fas fa-rocket"></i> Career Impact</h2>
+            <p>
+                This foundational course in ethical hacking served as a crucial stepping stone in my cybersecurity journey. 
+                The comprehensive curriculum provided the theoretical knowledge and practical skills needed to:
+            </p>
+            <ul>
+                <li>Launch my career in cybersecurity and penetration testing</li>
+                <li>Build confidence in using security tools and methodologies</li>
+                <li>Establish ethical hacking practices and responsible disclosure principles</li>
+                <li>Create a foundation for advanced certifications and specialized training</li>
+            </ul>
+            
+            <div class="highlight-box">
+                <i class="fas fa-lightbulb"></i>
+                <strong>Foundation Success:</strong> This course provided the essential groundwork that enabled me to 
+                successfully pursue advanced certifications, participate in bug bounty programs, and excel in CTF competitions.
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <a href="../index.html#achievements" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Portfolio
+            </a>
+        </div>
+    </div>
+    
+    <script src="../script.js"></script>
+</body>
+</html>

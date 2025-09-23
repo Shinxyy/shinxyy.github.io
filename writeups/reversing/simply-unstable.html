@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simply Unstable - Reversing Writeup</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <a href="../../index.html#writeups" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back to Portfolio
+    </a>
+    
+    <div class="writeup-container">
+        <div class="writeup-header">
+            <h1 style="color: var(--primary-color); margin-bottom: 20px; font-family: var(--font-mono);">
+                Simply Unstable - Reversing Writeup
+            </h1>
+            
+            <div class="challenge-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Category:</span>
+                    <span class="meta-value challenge-category reversing">Reversing</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Difficulty:</span>
+                    <span class="meta-value difficulty medium">Medium</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Author:</span>
+                    <span class="meta-value">Patrick Kuin</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Platform:</span>
+                    <span class="meta-value">StudSec CTF</span>
+                </div>
+            </div>
+            
+            <p style="color: var(--text-muted); font-style: italic;">
+                Binary analysis and XOR decryption challenge involving memory manipulation and shellcode execution.
+            </p>
+        </div>
+        
+        <div class="writeup-content">
+            <h2>$ file challenge</h2>
+            <p>Starting with basic binary analysis:</p>
+            
+            <div class="important-note">
+                <strong>Binary Information:</strong><br>
+                <code>ELF 64-bit LSB executable, x86-64, not stripped</code><br>
+                <em>The binary is not stripped, making analysis easier with function names intact</em>
+            </div>
+
+            <h2>$ ghidra challenge</h2>
+            <p>Opening the binary in Ghidra for static analysis. Let's examine the main function:</p>
+            
+            <div class="code-snippet">
+                <pre><code>undefined8 main(int param_1,undefined8 *param_2,undefined8 param_3,uchar *param_4,size_t param_5) {
+  undefined8 uVar1;
+  ulong uVar2;
+  size_t *outlen;
+  uchar *out;
+
+  if (param_1 < 2) {
+    printf("Usage: %s hex_key",*param_2);
+    uVar1 = 1;
+  } else {
+    out = (uchar *)0x0;
+    uVar2 = strtol((char *)param_2[1],(char **)0x0,0x10);
+    decrypt((EVP_PKEY_CTX *)(uVar2 & 0xffffffff),out,outlen,param_4,param_5);
+
+    if (flag_ciphertext == -0x1a76b7ab) {
+      (*(code *)&flag_ciphertext)();
+      putchar(10);
+    } else {
+      puts("Invalid key");
+    }
+    uVar1 = 0;
+  }
+  return uVar1;
+}</code></pre>
+            </div>
+
+            <p><strong>Key Observations:</strong></p>
+            <ul>
+                <li>The program expects a hex key as command line argument</li>
+                <li>The key is parsed with <code>strtol()</code> in base 16</li>
+                <li>A <code>decrypt()</code> function is called with the key</li>
+                <li>If <code>flag_ciphertext == -0x1a76b7ab</code>, it executes the flag as shellcode</li>
+            </ul>
+
+            <h2>$ analyze decrypt_function</h2>
+            <p>Now let's examine the decrypt function:</p>
+            
+            <div class="code-snippet">
+                <pre><code>int decrypt(EVP_PKEY_CTX *ctx,uchar *out,size_t *outlen,uchar *in,size_t inlen) {
+  int iVar1;
+  long lVar2;
+  uint local_28;
+
+  lVar2 = sysconf(0x1e);
+  iVar1 = mprotect((void *)(-lVar2 & 0x104020U),(long)(0x104020 - (int)(void *)(-lVar2 & 0x104020U)),7);
+  
+  if (iVar1 < 0) {
+    perror("mprotect:");
+  }
+  
+  for (local_28 = 0; local_28 < 0x18; local_28 = local_28 + 1) {
+    (&flag_ciphertext)[(int)local_28] = (&flag_ciphertext)[(int)local_28] ^ (uint)ctx;
+  }
+  
+  return local_28;
+}</code></pre>
+            </div>
+
+            <p><strong>Function Analysis:</strong></p>
+            <ul>
+                <li><code>mprotect()</code> makes memory executable (RWX permissions)</li>
+                <li>XOR operation on 24 bytes (<code>0x18</code>) of <code>flag_ciphertext</code></li>
+                <li>The XOR key is the user-provided hex value</li>
+            </ul>
+
+            <h2>$ gdb --args challenge test</h2>
+            <p>Using GDB to find the memory addresses and extract the encrypted flag:</p>
+            
+            <div class="code-snippet">
+                <pre><code>pwndbg> info files
+Symbols from "/home/kali/Documents/studsec/simply_unstable/Handout/challenge".
+Local exec file:
+    `/home/kali/Documents/studsec/simply_unstable/Handout/challenge', file type elf64-x86-64.
+    . . .
+    0x0000555555558020 - 0x0000555555558082 is .secret</code></pre>
+            </div>
+
+            <p>Now let's examine the encrypted flag data:</p>
+            
+            <div class="code-snippet">
+                <pre><code>pwndbg> x/24xb 0x0000555555558020
+0x555555558020 &lt;flag_ciphertext&gt;:    0x81    0x8c    0x3c    0x41    0x9c    0x49    0xe0    0x44
+0x555555558028 &lt;flag_ciphertext+8&gt;:  0x9c    0x4d    0x62    0xec    0x6d    0x85    0xf4    0xe5
+0x555555558030 &lt;flag_ciphertext+16&gt;: 0x95    0x85    0xf4    0xe5    0x95    0x8c    0x0d    0xa6</code></pre>
+            </div>
+
+            <h2>$ python3 solve.py</h2>
+            <p>Now we need to calculate the XOR key. We know:</p>
+            
+            <div class="step-list">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <div class="step-content">
+                        <strong>Target condition:</strong> <code>flag_ciphertext == -0x1a76b7ab</code><br>
+                        Converting: <code>-0x1a76b7ab = 0xe5894855</code>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <div class="step-content">
+                        <strong>Initial value:</strong> <code>0x413c8c81</code> (first 4 bytes, little-endian)
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <div class="step-content">
+                        <strong>Calculate XOR key:</strong> <code>initial_value ⊕ target_value</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-snippet">
+                <pre><code>initial_value = 0x413c8c81
+target_value = 0xe5894855
+X = initial_value ^ target_value
+print(f"XOR key should be: {hex(X)}")
+
+# Result: 0xa4b5c4d4</code></pre>
+            </div>
+
+            <h2>$ ./challenge 0xa4b5c4d4</h2>
+            <p>Testing our calculated XOR key:</p>
+            
+            <div class="code-snippet">
+                <pre><code>./challenge 0xa4b5c4d4</code></pre>
+            </div>
+
+            <div class="success-banner">
+                <i class="fas fa-flag"></i>
+                <strong>FLAG CAPTURED!</strong>
+            </div>
+
+            <h2>$ echo "Analysis Complete"</h2>
+            <p>The challenge was solved through a systematic approach:</p>
+            
+            <div class="learning-outcomes">
+                <h3><i class="fas fa-lightbulb"></i> Key Techniques Used</h3>
+                <ul>
+                    <li><strong>Static Analysis:</strong> Used Ghidra to reverse engineer the binary logic</li>
+                    <li><strong>Dynamic Analysis:</strong> Used GDB to extract runtime memory values</li>
+                    <li><strong>Cryptography:</strong> Applied XOR operations to decrypt the flag</li>
+                    <li><strong>Memory Analysis:</strong> Understanding little-endian byte ordering</li>
+                    <li><strong>Shellcode Execution:</strong> Recognized self-modifying code patterns</li>
+                </ul>
+            </div>
+
+            <div class="important-note">
+                <strong>Exploitation Flow:</strong><br>
+                1. Binary accepts hex key → 2. XORs encrypted flag with key → 3. Checks result against magic value → 4. Executes decrypted shellcode → 5. Prints flag
+            </div>
+            
+            <p>This challenge demonstrates the importance of understanding both static code analysis and dynamic memory manipulation in reverse engineering tasks.</p>
+        </div>
+    </div>
+</body>
+</html>
+

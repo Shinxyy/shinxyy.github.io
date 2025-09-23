@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Bounty Hunter | Cybersecurity Portfolio</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .bug-bounty-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #111;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.2);
+        }
+        
+        .bug-bounty-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #00d9ff;
+        }
+        
+        .bug-bounty-title {
+            font-size: 2.5rem;
+            color: #00d9ff;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+        }
+        
+        .bug-bounty-subtitle {
+            font-size: 1.2rem;
+            color: #66ff66;
+            margin-bottom: 2rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-card {
+            background: rgba(0, 217, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid #00d9ff;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            color: #00d9ff;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .stat-label {
+            color: #ccc;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .companies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .company-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .company-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient-primary);
+        }
+        
+        .company-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+            box-shadow: 0 10px 25px rgba(0, 217, 255, 0.2);
+        }
+        
+        .company-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .company-logo {
+            width: 50px;
+            height: 50px;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .company-name {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .company-type {
+            background: rgba(0, 217, 255, 0.2);
+            color: #00d9ff;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+        
+        .vulnerability-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+        
+        .vulnerability-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .vulnerability-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .vulnerability-list li i {
+            color: #ff6b6b;
+            width: 16px;
+        }
+        
+        .severity {
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+        
+        .severity.critical { background: rgba(255, 0, 0, 0.2); color: #ff0000; }
+        .severity.high { background: rgba(255, 102, 0, 0.2); color: #ff6600; }
+        .severity.medium { background: rgba(255, 165, 0, 0.2); color: #ffa500; }
+        .severity.low { background: rgba(0, 255, 0, 0.2); color: #00ff00; }
+        
+        .timeline {
+            margin: 2rem 0;
+        }
+        
+        .timeline-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-left: 2rem;
+            position: relative;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 1.2rem;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-color) 0%, transparent 100%);
+        }
+        
+        .timeline-item:last-child::after {
+            display: none;
+        }
+        
+        .timeline-content {
+            flex: 1;
+        }
+        
+        .timeline-date {
+            color: var(--primary-color);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .navigation {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #333;
+            text-align: center;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #00d9ff, #0099cc);
+            color: #000;
+            padding: 0.8rem 2rem;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 217, 255, 0.4);
+        }
+        
+        .highlight-box {
+            background: rgba(255, 165, 0, 0.1);
+            border: 1px solid #ffa500;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: #ffa500;
+        }
+        
+        .highlight-box i {
+            margin-right: 0.5rem;
+        }
+
+        /* Rewards Section Styles */
+        .rewards-section {
+            margin-top: 4rem;
+            padding: 3rem;
+            background: rgba(0, 217, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(0, 217, 255, 0.2);
+        }
+
+        .rewards-title {
+            text-align: center;
+            font-size: 2.2rem;
+            color: #00d9ff;
+            margin-bottom: 1rem;
+        }
+
+        .rewards-subtitle {
+            text-align: center;
+            color: #cccccc;
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .reward-card {
+            background: rgba(17, 17, 17, 0.8);
+            border-radius: 12px;
+            padding: 0;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .reward-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.2);
+            border-color: #00d9ff;
+        }
+
+        .reward-image {
+            width: 100%;
+            height: 300px;
+            flex-shrink: 0;
+        }
+
+        .reward-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 2px solid rgba(0, 217, 255, 0.4);
+        }
+
+        .reward-info {
+            padding: 2rem;
+        }
+
+        .reward-info h3 {
+            color: #00d9ff;
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .reward-info p {
+            color: #cccccc;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .reward-type {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b00, #ff0066);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .reward-image {
+                height: 250px;
+            }
+            
+            .reward-info {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-rain"></div>
+    
+    <div class="bug-bounty-container">
+        <div class="bug-bounty-header">
+            <h1 class="bug-bounty-title">Bug Bounty Hunter</h1>
+            <p class="bug-bounty-subtitle">Ethical Hacking & Responsible Disclosure</p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">10+</span>
+                    <span class="stat-label">Vulnerabilities Reported</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <span class="stat-label">Organizations Helped</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">2023-2025</span>
+                    <span class="stat-label">Active Period</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Responsible Disclosure</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bug-bounty-content">
+            <h2><i class="fas fa-bullseye"></i> About Bug Bounty Hunting</h2>
+            <p>
+                Bug bounty hunting is the practice of finding and responsibly disclosing security vulnerabilities 
+                in web applications, mobile apps, and other digital systems. As an ethical hacker, I help organizations 
+                improve their security posture by identifying weaknesses before malicious actors can exploit them.
+            </p>
+            
+            <div class="highlight-box">
+                <i class="fas fa-shield-alt"></i>
+                <strong>Ethical Approach:</strong> All security research is conducted with proper authorization 
+                and follows responsible disclosure practices to ensure organizations can fix vulnerabilities 
+                before they become public.
+            </div>
+            
+            <h2><i class="fas fa-building"></i> Organizations Secured</h2>
+            <p>
+                Successfully identified and reported vulnerabilities across various high-profile organizations, 
+                helping them strengthen their security infrastructure:
+            </p>
+            
+            <div class="companies-grid">
+                <div class="company-card">
+                    <div class="company-header">
+                        <div class="company-logo">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h3 class="company-name">NASA</h3>
+                        <span class="company-type">Government Agency</span>
+                    </div>
+                    <p>National Aeronautics and Space Administration - Critical infrastructure security research.</p>
+                    <ul class="vulnerability-list">
+                        <li>
+                            <i class="fas fa-bug"></i>
+                            Unrestricted File Upload in a NASA web application
+                            <span class="severity critical">Critical</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-bug"></i>
+                            Cross-Site Scripting (XSS) in public portal
+                            <span class="severity medium">Medium</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="company-card">
+                    <div class="company-header">
+                        <div class="company-logo">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3 class="company-name">Red Bull</h3>
+                        <span class="company-type">Corporate</span>
+                    </div>
+                    <p>Global energy drink company - E-commerce and marketing platform security assessment.</p>
+                    <ul class="vulnerability-list">
+                        <li>
+                            <i class="fas fa-bug"></i>
+                            Local File Inclusion (LFI) in promotional website
+                            <span class="severity high">High</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-bug"></i>
+                            CRSF to Reflected XSS in a web application
+                            <span class="severity medium">Medium</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-bug"></i>
+                            Cross-Site Scripting (XSS) a marketing page
+                            <span class="severity medium">Medium</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="company-card">
+                    <div class="company-header">
+                        <div class="company-logo">
+                            <i class="fas fa-flag"></i>
+                        </div>
+                        <h3 class="company-name">Dutch Government</h3>
+                        <span class="company-type">Government</span>
+                    </div>
+                    <p>Netherlands government services - Critical infrastructure and citizen data protection.</p>
+                    <ul class="vulnerability-list">
+                        <li>
+                            <i class="fas fa-bug"></i>
+                            Local File Inclusion (LFI) to RCE on a development server
+                            <span class="severity critical">Critical</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-bug"></i>
+                            XSS in websites made for the public
+                            <span class="severity medium">Medium</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="company-card">
+                    <div class="company-header">
+                        <div class="company-logo">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <h3 class="company-name">Various Organizations</h3>
+                        <span class="company-type">Multiple Sectors</span>
+                    </div>
+                    <p>Additional security research across various platforms and organizations.</p>
+                    <ul class="vulnerability-list">
+                        <li>
+                            <i class="fas fa-bug"></i>
+                            Plaintext Creditcard exports internet facing 
+                            <span class="severity critical">Critical</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-bug"></i>
+                            SSRF to LFI to RCE in a corporate web application
+                            <span class="severity critical">Critical</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-bug"></i>
+                            Unrestricted File Upload in a web application
+                            <span class="severity critical">Critical</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>  
+            <h2><i class="fas fa-timeline"></i> Bug Hunting Timeline</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">End 2023</div>
+                        <h4>Started Bug Bounty Journey</h4>
+                        <p>Began ethical hacking and vulnerability research, focusing on web application security and specifily the Vulnerable Disclosures, like Redbull and The Dutch Government</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">Early 2024</div>
+                        <h4>First Major Discoveries</h4>
+                        <p>Successfully identified and reported critical vulnerabilities in government infrastructure, establishing reputation in the security community.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">Mid 2024</div>
+                        <h4>Corporate Security Research</h4>
+                        <p>Expanded research to include corporate targets, discovering high-impact vulnerabilities in major brand applications and services.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2025</div>
+                        <h4>Continued Excellence</h4>
+                        <p>Ongoing security research with focus on emerging technologies and advanced attack vectors, maintaining 100% responsible disclosure rate.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <h2><i class="fas fa-tools"></i> Methodology & Tools</h2>
+            <p>
+                My bug hunting approach combines automated tools with manual testing techniques to identify 
+                vulnerabilities that might be missed by traditional security scans:
+            </p>
+            
+            <div class="companies-grid">
+                <div class="company-card">
+                    <div class="company-header">
+                        <div class="company-logo">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3 class="company-name">Reconnaissance</h3>
+                    </div>
+                    <ul class="vulnerability-list">
+                        <li><i class="fas fa-dot-circle"></i> Subdomain enumeration</li>
+                        <li><i class="fas fa-dot-circle"></i> Technology stack identification</li>
+                        <li><i class="fas fa-dot-circle"></i> Attack surface mapping</li>
+                        <li><i class="fas fa-dot-circle"></i> OSINT gathering</li>
+                    </ul>
+                </div>
+                
+                <div class="company-card">
+                    <div class="company-header">
+                        <div class="company-logo">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3 class="company-name">Testing Techniques</h3>
+                    </div>
+                    <ul class="vulnerability-list">
+                        <li><i class="fas fa-dot-circle"></i> Manual code review</li>
+                        <li><i class="fas fa-dot-circle"></i> Business logic testing</li>
+                        <li><i class="fas fa-dot-circle"></i> Authentication bypass</li>
+                        <li><i class="fas fa-dot-circle"></i> API security assessment</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <i class="fas fa-handshake"></i>
+                <strong>Collaboration:</strong> Working closely with security teams to ensure vulnerabilities 
+                are properly understood and remediated, contributing to the overall security ecosystem.
+            </div>
+
+            <!-- Recognition & Rewards Section -->
+            <div class="rewards-section">
+                <h2 class="rewards-title">🏆 Recognition & Rewards</h2>
+                <p class="rewards-subtitle">Special acknowledgments received for responsible disclosure</p>
+                
+                <div class="rewards-grid">
+                    <div class="reward-card">
+                        <div class="reward-image">
+                            <img src="../static/nasa.jpeg" alt="NASA Thank You Letter">
+                        </div>
+                        <div class="reward-info">
+                            <h3>NASA Thank You Letter</h3>
+                            <p>Official recognition from NASA for discovering critical vulnerabilities in their systems</p>
+                            <span class="reward-type">📧 Official Letter</span>
+                        </div>
+                    </div>
+                    
+                    <div class="reward-card">
+                        <div class="reward-image">
+                            <img src="../static/dutchgov.jpeg" alt="Dutch Government Hacker T-shirt">
+                        </div>
+                        <div class="reward-info">
+                            <h3>Dutch Government Hacker T-shirt</h3>
+                            <p>Exclusive t-shirt reward given to ethical hackers who help secure government infrastructure</p>
+                            <span class="reward-type">👕 Exclusive Swag</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <a href="../index.html#achievements" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Portfolio
+            </a>
+        </div>
+    </div>
+    
+    <script src="../script.js"></script>
+</body>
+</html>

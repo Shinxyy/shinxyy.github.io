@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTA: Python Programming Certification | Cybersecurity Portfolio</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .certificate-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #111;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.2);
+        }
+        
+        .certificate-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #00d9ff;
+        }
+        
+        .certificate-title {
+            font-size: 2.5rem;
+            color: #00d9ff;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+        }
+        
+        .certificate-subtitle {
+            font-size: 1.2rem;
+            color: #66ff66;
+            margin-bottom: 2rem;
+        }
+        
+        .certificate-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .meta-item {
+            background: rgba(0, 217, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 1px solid #00d9ff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .certificate-badge {
+            width: 200px;
+            height: 200px;
+            margin: 2rem auto;
+            background: linear-gradient(45deg, #00d9ff, #0078d4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(0, 217, 255, 0.5);
+            animation: pulse 3s infinite;
+        }
+        
+        .certificate-badge i {
+            font-size: 4rem;
+            color: #000;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(0, 217, 255, 0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(0, 217, 255, 0.8); }
+        }
+        
+        .certificate-content {
+            line-height: 1.8;
+            color: #ccc;
+        }
+        
+        .certificate-content h2 {
+            color: #00d9ff;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+        }
+        
+        .certificate-content h3 {
+            color: #66ff66;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .skill-category {
+            background: rgba(0, 255, 0, 0.05);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        
+        .skill-category h4 {
+            color: #00d9ff;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .skill-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .skill-list li {
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #222;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .skill-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .skill-list li i {
+            color: #00d9ff;
+            width: 16px;
+        }
+        
+        .credential-box {
+            background: rgba(0, 217, 255, 0.1);
+            border: 2px solid #00d9ff;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .credential-id {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            color: #00d9ff;
+            margin: 1rem 0;
+            letter-spacing: 2px;
+        }
+        
+        .verify-btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #00d9ff, #0078d4);
+            color: #000;
+            padding: 0.8rem 2rem;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin: 1rem 0.5rem;
+        }
+        
+        .verify-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 217, 255, 0.4);
+        }
+        
+        .navigation {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #333;
+            text-align: center;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #00d9ff, #0078d4);
+            color: #000;
+            padding: 0.8rem 2rem;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 217, 255, 0.4);
+        }
+        
+        .highlight-box {
+            background: rgba(255, 165, 0, 0.1);
+            border: 1px solid #ffa500;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: #ffa500;
+        }
+        
+        .highlight-box i {
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-rain"></div>
+    
+    <div class="certificate-container">
+        <div class="certificate-header">
+            <h1 class="certificate-title">MTA: Introduction to Programming Using Python</h1>
+            <p class="certificate-subtitle">Microsoft Technology Associate Certification</p>
+            <div class="certificate-meta">
+                <div class="meta-item">
+                    <i class="fas fa-calendar"></i>
+                    <span>Earned: 2021</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-certificate"></i>
+                    <span>Entry Level</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-building"></i>
+                    <span>Microsoft</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-code"></i>
+                    <span>Python Programming</span>
+                </div>
+            </div>
+            <div class="certificate-badge">
+                <i class="fab fa-python"></i>
+            </div>
+        </div>
+        
+        <div class="certificate-content">
+            <h2><i class="fas fa-info-circle"></i> About MTA Python Certification</h2>
+            <p>
+                The Microsoft Technology Associate (MTA): Introduction to Programming Using Python certification 
+                validates foundational knowledge of programming concepts and Python syntax. This certification 
+                demonstrates the skills and knowledge to recognize and write syntactically correct Python code, 
+                recognize data types supported by Python, and the ability to recognize and write Python code 
+                that will logically solve a given problem.
+            </p>
+            
+            <div class="highlight-box">
+                <i class="fas fa-star"></i>
+                <strong>Microsoft Recognition:</strong> This certification is recognized by Microsoft as an entry-level 
+                credential that validates fundamental programming concepts using the Python programming language.
+            </div>
+            
+            <h2><i class="fas fa-brain"></i> Skills & Knowledge Areas</h2>
+            <p>
+                The MTA Python certification covers essential programming concepts and Python-specific knowledge 
+                areas that form the foundation for software development.
+            </p>
+            
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h4><i class="fas fa-code"></i> Python Syntax & Semantics</h4>
+                    <ul class="skill-list">
+                        <li><i class="fas fa-dot-circle"></i> Python Language Syntax</li>
+                        <li><i class="fas fa-dot-circle"></i> Code Structure & Indentation</li>
+                        <li><i class="fas fa-dot-circle"></i> Comments and Documentation</li>
+                        <li><i class="fas fa-dot-circle"></i> Keywords and Identifiers</li>
+                        <li><i class="fas fa-dot-circle"></i> Error Handling Basics</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <h4><i class="fas fa-database"></i> Data Types & Variables</h4>
+                    <ul class="skill-list">
+                        <li><i class="fas fa-dot-circle"></i> Numbers (int, float, complex)</li>
+                        <li><i class="fas fa-dot-circle"></i> Strings and String Methods</li>
+                        <li><i class="fas fa-dot-circle"></i> Lists, Tuples, and Sets</li>
+                        <li><i class="fas fa-dot-circle"></i> Dictionaries</li>
+                        <li><i class="fas fa-dot-circle"></i> Variable Assignment</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <h4><i class="fas fa-cogs"></i> Control Flow</h4>
+                    <ul class="skill-list">
+                        <li><i class="fas fa-dot-circle"></i> Conditional Statements (if/elif/else)</li>
+                        <li><i class="fas fa-dot-circle"></i> Loops (for and while)</li>
+                        <li><i class="fas fa-dot-circle"></i> Loop Control (break, continue)</li>
+                        <li><i class="fas fa-dot-circle"></i> Logical Operators</li>
+                        <li><i class="fas fa-dot-circle"></i> Comparison Operators</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <h4><i class="fas fa-puzzle-piece"></i> Functions & Modules</h4>
+                    <ul class="skill-list">
+                        <li><i class="fas fa-dot-circle"></i> Function Definition and Calling</li>
+                        <li><i class="fas fa-dot-circle"></i> Parameters and Arguments</li>
+                        <li><i class="fas fa-dot-circle"></i> Return Values</li>
+                        <li><i class="fas fa-dot-circle"></i> Built-in Functions</li>
+                        <li><i class="fas fa-dot-circle"></i> Module Imports</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <h4><i class="fas fa-file-alt"></i> Input/Output Operations</h4>
+                    <ul class="skill-list">
+                        <li><i class="fas fa-dot-circle"></i> Reading User Input</li>
+                        <li><i class="fas fa-dot-circle"></i> Output Formatting</li>
+                        <li><i class="fas fa-dot-circle"></i> File Reading and Writing</li>
+                        <li><i class="fas fa-dot-circle"></i> String Formatting</li>
+                        <li><i class="fas fa-dot-circle"></i> Print Function Usage</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <h4><i class="fas fa-bug"></i> Debugging & Problem Solving</h4>
+                    <ul class="skill-list">
+                        <li><i class="fas fa-dot-circle"></i> Syntax Error Recognition</li>
+                        <li><i class="fas fa-dot-circle"></i> Logic Error Identification</li>
+                        <li><i class="fas fa-dot-circle"></i> Code Tracing</li>
+                        <li><i class="fas fa-dot-circle"></i> Algorithm Design</li>
+                        <li><i class="fas fa-dot-circle"></i> Problem Decomposition</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h2><i class="fas fa-tools"></i> Programming Concepts & Best Practices</h2>
+            <p>
+                The certification emphasizes fundamental programming concepts that are essential for any software developer:
+            </p>
+            
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h4><i class="fas fa-laptop-code"></i> Development Environment</h4>
+                    <ul class="skill-list">
+                        <li><i class="fas fa-dot-circle"></i> Python IDLE</li>
+                        <li><i class="fas fa-dot-circle"></i> Command Line Interface</li>
+                        <li><i class="fas fa-dot-circle"></i> Code Editors</li>
+                        <li><i class="fas fa-dot-circle"></i> Python Installation</li>
+                        <li><i class="fas fa-dot-circle"></i> Virtual Environments</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <h4><i class="fas fa-book"></i> Python Libraries</h4>
+                    <ul class="skill-list">
+                        <li><i class="fas fa-dot-circle"></i> Standard Library</li>
+                        <li><i class="fas fa-dot-circle"></i> Math Module</li>
+                        <li><i class="fas fa-dot-circle"></i> Random Module</li>
+                        <li><i class="fas fa-dot-circle"></i> Datetime Module</li>
+                        <li><i class="fas fa-dot-circle"></i> OS Module</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h2><i class="fas fa-graduation-cap"></i> Certification Details</h2>
+            <div class="credential-box">
+                <h3><i class="fas fa-id-card"></i> Certification Credentials</h3>
+                <p><strong>Certification ID:</strong></p>
+                <div class="credential-id">MTA-Python-2021</div>
+                <p><strong>Issue Date:</strong> 2021</p>
+                <p><strong>Issued By:</strong> Microsoft</p>
+                <p><strong>Certification Type:</strong> Microsoft Technology Associate</p>
+                
+                <a href="https://www.credly.com/badges/d63d3851-0847-4f12-8fee-af1f53ac0929" class="verify-btn" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> View on Credly
+                </a>
+                <a href="https://www.credly.com/badges/d63d3851-0847-4f12-8fee-af1f53ac0929" class="verify-btn" target="_blank">
+                    <i class="fas fa-medal"></i> Verify Badge
+                </a>
+            </div>
+            
+            <h2><i class="fas fa-chart-line"></i> Professional Impact</h2>
+            <p>
+                This certification has provided me with a solid foundation in:
+            </p>
+            <ul>
+                <li><strong>Programming fundamentals</strong> using Python syntax and best practices</li>
+                <li><strong>Problem-solving skills</strong> through algorithmic thinking and code logic</li>
+                <li><strong>Data manipulation</strong> using Python's built-in data structures</li>
+                <li><strong>Code debugging</strong> and error handling techniques</li>
+                <li><strong>Software development foundations</strong> that support advanced programming concepts</li>
+            </ul>
+            
+            <div class="highlight-box">
+                <i class="fas fa-trophy"></i>
+                <strong>Foundation Achievement:</strong> This certification demonstrates proficiency in Python programming 
+                fundamentals and serves as a stepping stone to more advanced software development and cybersecurity applications.
+            </div>
+            
+            <h2><i class="fas fa-arrows-alt"></i> Continued Learning</h2>
+            <p>
+                This foundational certification has been instrumental in building advanced skills in cybersecurity 
+                automation, penetration testing scripts, and security tool development using Python.
+            </p>
+        </div>
+        
+        <div class="navigation">
+            <a href="../index.html#achievements" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Portfolio
+            </a>
+        </div>
+    </div>
+    
+    <script src="../script.js"></script>
+</body>
+</html>

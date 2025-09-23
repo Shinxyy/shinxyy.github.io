@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - 0xShinxy</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="index.html">
+                    <span class="bracket">[</span>
+                    <span class="username">0xShinxy</span>
+                    <span class="bracket">]</span>
+                </a>
+            </div>
+            <div class="nav-menu">
+                <a href="../index.html#about" class="nav-link">About</a>
+                <a href="../index.html#skills" class="nav-link">Skills</a>
+                <a href="../index.html#writeups" class="nav-link">Writeups</a>
+                <a href="../index.html#achievements" class="nav-link">Achievements</a>
+                <a href="../blogs.html" class="nav-link active">Blog</a>
+                <a href="../index.html#contact" class="nav-link">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <div class="hero-content">
+                    <div class="terminal-prompt">
+                        <span class="prompt-symbol">$</span>
+                        <span class="command">cat /var/log/thoughts.log</span>
+                    </div>
+                    <h1 class="hero-title">Security Blog</h1>
+                    <p class="hero-description">Insights, discoveries, and technical deep-dives into cybersecurity</p>
+                </div>
+            </section>
+
+            <!-- Blog Posts Grid -->
+            <section class="blog-section">
+                <div class="blog-grid">
+                    
+                    <!-- CVE Blog Post -->
+                    <article class="blog-card featured">
+                        <div class="blog-header">
+                            <div class="blog-category">CVE Research</div>
+                            <div class="blog-date">2024</div>
+                        </div>
+                        <div class="blog-content">
+                            <h2 class="blog-title">
+                                <a href="blogs/CVE_2024_51362.html">CVE-2024-51362 Discovery</a>
+                            </h2>
+                            <p class="blog-excerpt">
+                                Sometimes bugs are easy to find. A typical example is CVE-2024-51362, where a smart camera was exploited.
+                            <div class="blog-meta">
+                                <div class="blog-tags">
+                                    <span class="tag">CVE</span>
+                                    <span class="tag">Vulnerability Research</span>
+                                    <span class="tag">Security Analysis</span>
+                                </div>
+                                <div class="read-time">
+                                    <i class="fas fa-clock"></i> 5 min read
+                                </div>
+                            </div>
+                        </div>
+                        <div class="blog-footer">
+                            <a href="blogs/CVE_2024_51362.html" class="read-more-btn">
+                                Read Full Analysis <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </article>
+
+                    <!-- Placeholder for future blog posts -->
+                    <article class="blog-card coming-soon">
+                        <div class="blog-header">
+                            <div class="blog-category">Hardware Hacking</div>
+                            <div class="blog-date">Coming Soon</div>
+                        </div>
+                        <div class="blog-content">
+                            <h2 class="blog-title">Firmware Dumping with SPI Flash Clips</h2>
+                            <p class="blog-excerpt">
+                                Complete guide to hardware firmware extraction using SPI flash clips, including tool selection, wiring techniques, and data analysis for IoT security research.
+                            </p>
+                            <div class="blog-meta">
+                                <div class="blog-tags">
+                                    <span class="tag">Hardware Hacking</span>
+                                    <span class="tag">SPI Flash</span>
+                                    <span class="tag">Firmware Analysis</span>
+                                    <span class="tag">IoT Security</span>
+                                </div>
+                                <div class="read-time">
+                                    <i class="fas fa-clock"></i> Coming Soon
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+            </section>
+
+            <!-- Blog Stats -->
+            <section class="blog-stats">
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <div class="stat-number">1</div>
+                        <div class="stat-label">Published Posts</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">1</div>
+                        <div class="stat-label">CVE Research</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">2024</div>
+                        <div class="stat-label">Started Blogging</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">More</div>
+                        <div class="stat-label">Coming Soon</div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2024 0xShinxy. All rights reserved.</p>
+                <div class="social-links">
+                    <a href="https://github.com/Shinxyy" target="_blank"><i class="fab fa-github"></i></a>
+                    <a href="https://linkedin.com/in/patrick-kuin-8a08a81b7" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a href="mailto:patrick@nova-byte.nl" target="_blank"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

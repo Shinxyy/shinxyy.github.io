@@ -3,93 +3,531 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hacking Blog - Article Index</title>
-    <style>
-        /* Basic reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* Dark mode theme */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #e0e0e0;
-            line-height: 1.6;
-            padding: 20px;
-            max-width: 800px;
-            margin: auto;
-            text-align: center;
-        }
-
-        h1 {
-            color: #00bcd4;
-            margin-bottom: 30px;
-            text-align: center;
-            font-size: 2em;
-        }
-
-        h2 {
-            color: #ffffff;
-            margin-top: 20px;
-            font-size: 1.5em;
-        }
-
-        /* Professional button styles */
-        .button {
-            display: inline-block;
-            width: 500px;         /* Fixed width for uniform size */
-            height: 50px;         /* Fixed height for uniform size */
-            background-color: #1e1e1e;
-            color: #e0e0e0;
-            padding: 10px 0;
-            margin: 10px 0;
-            border: 2px solid #00bcd4;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 1.1em;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .button:hover {
-            background-color: #00bcd4;
-            color: #121212;
-            border-color: #00bcd4;
-            transition: 0.3s;
-        }
-
-        /* Footer styling */
-        footer {
-            margin-top: 30px;
-            font-size: 0.9em;
-            color: #888;
-        }
-    </style>
+    <title>Portfolio 0xShinxy</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>Hacking Blog - Article Index</h1>
-    </header>
+    <!-- Terminal-style loading screen -->
+    <div id="loading-screen">
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <div class="terminal-buttons">
+                    <div class="btn close"></div>
+                    <div class="btn minimize"></div>
+                    <div class="btn maximize"></div>
+                </div>
+                <div class="terminal-title">security@localhost:~$</div>
+            </div>
+            <div class="terminal-body">
+                <div class="loading-text">
+                    <span id="typing-text"></span>
+                    <span class="cursor">|</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <section>
-        This is a blog dedicated to sharing writeups from CTF challenges and insights from discovered vulnerabilities. Here, you'll find deep dives into techniques, problem-solving approaches, and lessons learned from the world of cybersecurity.
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="bracket">[</span>
+                <span class="username">0xShinxy</span>
+                <span class="bracket">]</span>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="#home" class="nav-link">~/home</a>
+                <a href="#about" class="nav-link">./about</a>
+                <a href="#skills" class="nav-link">--skills</a>
+                <a href="#writeups" class="nav-link">./writeups</a>
+                <a href="blogs.html" class="nav-link">./blogs</a>
+                <a href="#achievements" class="nav-link">--achievements</a>
+                <a href="#contact" class="nav-link">./contact</a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="terminal-prompt">
+                    <span class="prompt-symbol">$</span>
+                    <span class="command">whoami</span>
+                </div>
+                <h1 class="hero-title">
+                    <span class="typing-animation">Patrick Kuin</span>
+                </h1>
+                <h2 class="hero-subtitle">Cybersecurity Enthusiast | CTF Player | Penetration Tester</h2>
+                <p class="hero-description">
+                    Passionate about breaking things to understand how they work. 
+                    Specializing in web application security, reverse engineering, and CTF competitions.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#writeups" class="btn btn-primary">
+                        <i class="fas fa-terminal"></i> View Writeups
+                    </a>
+                    <a href="#achievements" class="btn btn-secondary">
+                        <i class="fas fa-trophy"></i> Achievements
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">100+</span>
+                        <span class="stat-label">CTF Challenges Solved</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">10+</span>
+                        <span class="stat-label">Reported Vulnerability Disclosure</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">Pro Hacker</span>
+                        <span class="stat-label">HackTheBox Ranking</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="matrix-bg"></div>
     </section>
 
-    <section>
-        <h2>Reverse Engineering</h2>
-        <a href="blogs/rev_simply_unstable.html" class="button">Simply Unstable</a><br>
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="command-prompt">$ cat about.txt</span>
+                </h2>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-buttons">
+                                <div class="code-btn"></div>
+                                <div class="code-btn"></div>
+                                <div class="code-btn"></div>
+                            </div>
+                            <span class="code-title">about_me.py</span>
+                        </div>
+                        <div class="code-content">
+                            <pre><code><span class="keyword">class</span> <span class="class-name">Hacker</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="param">self</span>):
+        <span class="param">self</span>.name = <span class="string">"Patrick Kuin"</span>
+        <span class="param">self</span>.role = <span class="string">"Ethical Hacker"</span>
+        <span class="param">self</span>.ctf_team = <span class="string">"Superflat"</span>
+        <span class="param">self</span>.interests = [
+            <span class="string">"Reverse Engineering"</span>,
+            <span class="string">"Binary Exploitation"</span>,
+            <span class="string">"Hardware Hacking"</span>
+        ]
+        <span class="param">self</span>.currently_learning = <span class="string">"Software Reversing & Exploitation"</span>
+        
+    <span class="keyword">def</span> <span class="function">get_motto</span>(<span class="param">self</span>):
+        <span class="keyword">return</span> <span class="string">"Hack yourself before they do..."</span></code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section>
-        <h2>Hardware Hacking</h2>
-        <a href="blogs/CVE_2024_51362.html" class="button">CVE-2024-51362</a><br>
+    <!-- Skills Section -->
+    <section id="skills" class="skills">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="command-prompt">$ ls -la /skills/</span>
+                </h2>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3 class="category-title">
+                        <i class="fas fa-shield-alt"></i>
+                        Security Tools
+                    </h3>
+                    <div class="skill-list">
+                        <div class="skill-item">
+                            <span class="skill-name">Burp Suite</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Kali Linux</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Nmap</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Wireshark</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h3 class="category-title">
+                        <i class="fas fa-code"></i>
+                        Programming
+                    </h3>
+                    <div class="skill-list">
+                        <div class="skill-item">
+                            <span class="skill-name">Python</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Assembly</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">C/C++</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 65%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3 class="category-title">
+                        <i class="fas fa-bug"></i>
+                        Exploit Categories
+                    </h3>
+                    <div class="skill-list">
+                        <div class="skill-item">
+                            <span class="skill-name">Forensics</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Reverse Engineering</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Web Exploitation</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 70%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Binary Exploitation</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 60%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <footer>
-        <p>&copy; 2024 Shinxy. All rights reserved.</p>
+    <!-- CTF Writeups Section -->
+    <section id="writeups" class="writeups">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="command-prompt">$ find ./writeups -name "*.md"</span>
+                </h2>
+            </div>
+            <div class="writeups-filter">
+                <button class="filter-btn active" data-category="all">All</button>
+                <button class="filter-btn" data-category="web">Web</button>
+                <button class="filter-btn" data-category="crypto">Crypto</button>
+                <button class="filter-btn" data-category="reversing">Reversing</button>
+                <button class="filter-btn" data-category="pwn">PWN</button>
+                <button class="filter-btn" data-category="fullpwn">Full PWN</button>
+                <button class="filter-btn" data-category="forensics">Forensics</button>
+            </div>
+            <div class="writeups-grid">
+                <!-- HTB Checker - Full PWN -->
+                <div class="writeup-card" data-category="fullpwn">
+                    <div class="card-header">
+                        <div class="challenge-info">
+                            <h3 class="challenge-title">HTB Checker</h3>
+                            <span class="challenge-category fullpwn">Full PWN</span>
+                        </div>
+                        <div class="challenge-points">850 pts</div>
+                    </div>
+                    <div class="challenge-meta">
+                        <span class="competition">HackTheBox</span>
+                        <span class="difficulty hard">Hard</span>
+                    </div>
+                    <p class="challenge-description">
+                        Complete Linux machine compromise through SQL injection, SSRF exploitation, and privilege escalation via shared memory race condition.
+                    </p>
+                    <div class="challenge-tags">
+                        <span class="tag">SQL Injection</span>
+                        <span class="tag">SSRF</span>
+                        <span class="tag">Race Condition</span>
+                        <span class="tag">Privilege Escalation</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="writeups/fullpwn/htb_checker.html" class="btn btn-outline">Read Writeup</a>
+                        <a href="https://github.com/yourusername/ctf-writeups/tree/main/htb-checker" class="btn btn-icon" target="_blank"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+
+                <!-- Simply Unstable - Reversing -->
+                <div class="writeup-card" data-category="reversing">
+                    <div class="card-header">
+                        <div class="challenge-info">
+                            <h3 class="challenge-title">Simply Unstable</h3>
+                            <span class="challenge-category reversing">Reversing</span>
+                        </div>
+                        <div class="challenge-points">450 pts</div>
+                    </div>
+                    <div class="challenge-meta">
+                        <span class="competition">StudSec CTF</span>
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+                    <p class="challenge-description">
+                        Binary analysis and XOR decryption challenge involving memory manipulation and shellcode execution.
+                    </p>
+                    <div class="challenge-tags">
+                        <span class="tag">XOR Decryption</span>
+                        <span class="tag">Memory Analysis</span>
+                        <span class="tag">Shellcode</span>
+                        <span class="tag">GDB</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="writeups/reversing/simply-unstable.html" class="btn btn-outline">Read Writeup</a>
+                        <a href="https://github.com/yourusername/ctf-writeups/tree/main/simply-unstable" class="btn btn-icon" target="_blank"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements Section -->
+    <section id="achievements" class="achievements">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="command-prompt">$ cat achievements.log</span>
+                </h2>
+            </div>
+            <div class="achievements-content">
+                <div class="achievements-grid">
+                    <a href="achievements/zeroday-zoetermeer-2025.html" class="achievement-card">
+                        <div class="achievement-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="achievement-content">
+                            <h3 class="achievement-title">ZeroDay Zoetermeer 2025</h3>
+                            <p class="achievement-description">
+                                Won first place at ZeroDay Zoetermeer penetration testing competition.
+                            </p>
+                            <div class="achievement-meta">
+                                <span class="achievement-date">2025</span>
+                                <span class="achievement-category">First Place Winner</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="achievements/halon-2023.html" class="achievement-card">
+                        <div class="achievement-icon">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <div class="achievement-content">
+                            <h3 class="achievement-title">HALON-2023 Award</h3>
+                            <p class="achievement-description">
+                                Top Performer Recognition for Most Vulnerabilities Found at Most Participating Organisations.
+                            </p>
+                            <div class="achievement-meta">
+                                <span class="achievement-date">2023</span>
+                                <span class="achievement-category">Security Research Excellence</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="certificates/mta_python.html" class="achievement-card">
+                        <div class="achievement-icon">
+                            <i class="fab fa-python"></i>
+                        </div>
+                        <div class="achievement-content">
+                            <h3 class="achievement-title">MTA: Python Programming</h3>
+                            <p class="achievement-description">
+                                Microsoft Technology Associate certification for Introduction to Programming Using Python
+                            </p>
+                            <div class="achievement-meta">
+                                <span class="achievement-date">October 2021</span>
+                                <span class="achievement-category">Certification</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a class="achievement-card">
+                        <div class="achievement-icon">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                        <div class="achievement-content">
+                            <h3 class="achievement-title">CTC - Cyberbootcamp 2024</h3>
+                            <p class="achievement-description">
+                                Selected for the CyberBootcamp via the national Challenge the Cyber competition.
+                            </p>
+                            <div class="achievement-meta">
+                                <span class="achievement-date">July 2024</span>
+                                <span class="achievement-category">Competition</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="bug-bounty/index.html" class="achievement-card">
+                        <div class="achievement-icon">
+                            <i class="fas fa-bug"></i>
+                        </div>
+                        <div class="achievement-content">
+                            <h3 class="achievement-title">Bug Bounty Hunter</h3>
+                            <p class="achievement-description">
+                                Successfully reported 10+ vulnerabilities through various bug bounty programs. Hacked NASA, Redbull, The Dutch government, and more.
+                            </p>
+                            <div class="achievement-meta">
+                                <span class="achievement-date">2023-2025</span>
+                                <span class="achievement-category">Bug Bounty</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <div class="achievement-card">
+                        <div class="achievement-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="achievement-content">
+                            <h3 class="achievement-title">B.S. Cybersecurity</h3>
+                            <p class="achievement-description">
+                                 Bachelor of Science in Cybersecurity <!-- with Cum Laude honors -->
+                            </p>
+                            <div class="achievement-meta">
+                                <span class="achievement-date">In progress</span>
+                                <span class="achievement-category">Education</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Certification Showcase -->
+                <div class="certifications-showcase">
+                    <h3 class="showcase-title">Certifications</h3>
+                    <div class="cert-grid">
+                        <a href="certificates/mta_python.html" class="cert-badge">
+                            <img src="static/py_logo.webp" alt="MTA Python" class="cert-image">
+                            <span class="cert-name">MTA Python</span>
+                        </a>
+                        <a href="certificates/ethical_hacking_course.html" class="cert-badge">
+                            <img src="static/udemy_logo.png" alt="Ethical Hacking Course" class="cert-image">
+                            <span class="cert-name">Ethical Hacking Course</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="command-prompt">$ netstat -an | grep LISTEN</span>
+                </h2>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="terminal-output">
+                        <div class="output-line">
+                            <span class="output-label">Email:</span>
+                            <a href="mailto:patrickATnova-byte.nl" class="output-value">patrickATnova-byte.nl</a>
+                        </div>
+                        <div class="output-line">
+                            <span class="output-label">LinkedIn:</span>
+                            <a href="https://linkedin.com/in/patrick-kuin-8a08a81b7" class="output-value">linkedin.com/in/patrick-kuin-8a08a81b7</a>
+                        </div>
+                        <div class="output-line">
+                            <span class="output-label">GitHub:</span>
+                            <a href="https://github.com/Shinxyy" class="output-value">github.com/Shinxyy</a>
+                        </div>
+                        <div class="output-line">
+                            <span class="output-label">HackTheBox:</span>
+                            <a href="https://app.hackthebox.com/profile/506429" class="output-value">app.hackthebox.com/profile/506429</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <div class="terminal-window">
+                        <div class="terminal-header">
+                            <div class="terminal-buttons">
+                                <div class="btn close"></div>
+                                <div class="btn minimize"></div>
+                                <div class="btn maximize"></div>
+                            </div>
+                            <div class="terminal-title">sendmail.sh</div>
+                        </div>
+                        <form class="terminal-form" action="https://formspree.io/f/xgvneaga" method="POST">
+                            <div class="form-line">
+                                <span class="form-prompt">Name:</span>
+                                <input type="text" name="name" required>
+                            </div>
+                            <div class="form-line">
+                                <span class="form-prompt">Email:</span>
+                                <input type="email" name="email" required>
+                            </div>
+                            <div class="form-line">
+                                <span class="form-prompt">Subject:</span>
+                                <input type="text" name="subject" required>
+                            </div>
+                            <div class="form-line">
+                                <span class="form-prompt">Message:</span>
+                                <textarea name="message" required></textarea>
+                            </div>
+                            <div class="form-line">
+                                <button type="submit" class="submit-btn">$ ./send_message.sh</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-text">
+                    <p>&copy; 2025 0xShinxy. All rights reserved.</p>
+                    <p class="footer-quote">"Phishing: turning your curiosity into my access."</p>
+                </div>
+                <div class="social-links">
+                    <a href="https://github.com/Shinxyy" class="social-link"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/patrick-kuin-8a08a81b7" class="social-link"><i class="fab fa-linkedin"></i></a>
+                    <a href="mailto:patrickATnova-byte.nl" class="social-link"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
     </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
