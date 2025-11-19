@@ -41,7 +41,6 @@
                 <a href="#home" class="nav-link">~/home</a>
                 <a href="#about" class="nav-link">./about</a>
                 <a href="#skills" class="nav-link">--skills</a>
-                <a href="#writeups" class="nav-link">./writeups</a>
                 <a href="blogs.html" class="nav-link">./blogs</a>
                 <a href="#achievements" class="nav-link">--achievements</a>
                 <a href="#contact" class="nav-link">./contact</a>
@@ -71,9 +70,6 @@
                     Specializing in web application security, reverse engineering, and CTF competitions.
                 </p>
                 <div class="hero-buttons">
-                    <a href="#writeups" class="btn btn-primary">
-                        <i class="fas fa-terminal"></i> View Writeups
-                    </a>
                     <a href="#achievements" class="btn btn-secondary">
                         <i class="fas fa-trophy"></i> Achievements
                     </a>
@@ -160,7 +156,7 @@
                             </div>
                         </div>
                         <div class="skill-item">
-                            <span class="skill-name">Kali Linux</span>
+                            <span class="skill-name">Ghidra</span>
                             <div class="skill-bar">
                                 <div class="skill-progress" style="width: 85%"></div>
                             </div>
@@ -201,7 +197,7 @@
                         <div class="skill-item">
                             <span class="skill-name">C/C++</span>
                             <div class="skill-bar">
-                                <div class="skill-progress" style="width: 65%"></div>
+                                <div class="skill-progress" style="width: 75%"></div>
                             </div>
                         </div>
                     </div>
@@ -214,13 +210,13 @@
                     </h3>
                     <div class="skill-list">
                         <div class="skill-item">
-                            <span class="skill-name">Forensics</span>
+                            <span class="skill-name">Reverse Engineering</span>
                             <div class="skill-bar">
                                 <div class="skill-progress" style="width: 80%"></div>
                             </div>
                         </div>
                         <div class="skill-item">
-                            <span class="skill-name">Reverse Engineering</span>
+                            <span class="skill-name">Binary Exploitation</span>
                             <div class="skill-bar">
                                 <div class="skill-progress" style="width: 75%"></div>
                             </div>
@@ -228,13 +224,13 @@
                         <div class="skill-item">
                             <span class="skill-name">Web Exploitation</span>
                             <div class="skill-bar">
-                                <div class="skill-progress" style="width: 70%"></div>
+                                <div class="skill-progress" style="width: 75%"></div>
                             </div>
                         </div>
                         <div class="skill-item">
-                            <span class="skill-name">Binary Exploitation</span>
+                            <span class="skill-name">Forensics</span>
                             <div class="skill-bar">
-                                <div class="skill-progress" style="width: 60%"></div>
+                                <div class="skill-progress" style="width: 70%"></div>
                             </div>
                         </div>
                     </div>
@@ -243,82 +239,7 @@
         </div>
     </section>
 
-    <!-- CTF Writeups Section -->
-    <section id="writeups" class="writeups">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <span class="command-prompt">$ find ./writeups -name "*.md"</span>
-                </h2>
-            </div>
-            <div class="writeups-filter">
-                <button class="filter-btn active" data-category="all">All</button>
-                <button class="filter-btn" data-category="web">Web</button>
-                <button class="filter-btn" data-category="crypto">Crypto</button>
-                <button class="filter-btn" data-category="reversing">Reversing</button>
-                <button class="filter-btn" data-category="pwn">PWN</button>
-                <button class="filter-btn" data-category="fullpwn">Full PWN</button>
-                <button class="filter-btn" data-category="forensics">Forensics</button>
-            </div>
-            <div class="writeups-grid">
-                <!-- HTB Checker - Full PWN -->
-                <div class="writeup-card" data-category="fullpwn">
-                    <div class="card-header">
-                        <div class="challenge-info">
-                            <h3 class="challenge-title">HTB Checker</h3>
-                            <span class="challenge-category fullpwn">Full PWN</span>
-                        </div>
-                        <div class="challenge-points">850 pts</div>
-                    </div>
-                    <div class="challenge-meta">
-                        <span class="competition">HackTheBox</span>
-                        <span class="difficulty hard">Hard</span>
-                    </div>
-                    <p class="challenge-description">
-                        Complete Linux machine compromise through SQL injection, SSRF exploitation, and privilege escalation via shared memory race condition.
-                    </p>
-                    <div class="challenge-tags">
-                        <span class="tag">SQL Injection</span>
-                        <span class="tag">SSRF</span>
-                        <span class="tag">Race Condition</span>
-                        <span class="tag">Privilege Escalation</span>
-                    </div>
-                    <div class="card-actions">
-                        <a href="writeups/fullpwn/htb_checker.html" class="btn btn-outline">Read Writeup</a>
-                        <a href="https://github.com/yourusername/ctf-writeups/tree/main/htb-checker" class="btn btn-icon" target="_blank"><i class="fab fa-github"></i></a>
-                    </div>
-                </div>
-
-                <!-- Simply Unstable - Reversing -->
-                <div class="writeup-card" data-category="reversing">
-                    <div class="card-header">
-                        <div class="challenge-info">
-                            <h3 class="challenge-title">Simply Unstable</h3>
-                            <span class="challenge-category reversing">Reversing</span>
-                        </div>
-                        <div class="challenge-points">450 pts</div>
-                    </div>
-                    <div class="challenge-meta">
-                        <span class="competition">StudSec CTF</span>
-                        <span class="difficulty medium">Medium</span>
-                    </div>
-                    <p class="challenge-description">
-                        Binary analysis and XOR decryption challenge involving memory manipulation and shellcode execution.
-                    </p>
-                    <div class="challenge-tags">
-                        <span class="tag">XOR Decryption</span>
-                        <span class="tag">Memory Analysis</span>
-                        <span class="tag">Shellcode</span>
-                        <span class="tag">GDB</span>
-                    </div>
-                    <div class="card-actions">
-                        <a href="writeups/reversing/simply-unstable.html" class="btn btn-outline">Read Writeup</a>
-                        <a href="https://github.com/yourusername/ctf-writeups/tree/main/simply-unstable" class="btn btn-icon" target="_blank"><i class="fab fa-github"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- CTF Writeups Section removed -->
 
     <!-- Achievements Section -->
     <section id="achievements" class="achievements">
@@ -351,13 +272,45 @@
                             <i class="fas fa-award"></i>
                         </div>
                         <div class="achievement-content">
-                            <h3 class="achievement-title">HALON-2023 Award</h3>
+                            <h3 class="achievement-title">HALON 2023 Winner</h3>
                             <p class="achievement-description">
                                 Top Performer Recognition for Most Vulnerabilities Found at Most Participating Organisations.
                             </p>
                             <div class="achievement-meta">
                                 <span class="achievement-date">2023</span>
                                 <span class="achievement-category">Security Research Excellence</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="achievements/halon-2025.html" class="achievement-card">
+                        <div class="achievement-icon">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <div class="achievement-content">
+                            <h3 class="achievement-title">HALON 2025 Winner</h3>
+                            <p class="achievement-description">
+                                My team won first place at HALON 2025 after discovering 15 verified vulnerabilities, including an RCE and a yet-to-be-disclosed 0-day. Our work significantly improved the security of critical educational systems across the Netherlands.
+                            </p>
+                            <div class="achievement-meta">
+                                <span class="achievement-date">2025</span>
+                                <span class="achievement-category">First Place Winner</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="achievements/ctrl-space-finals.html" class="achievement-card">
+                        <div class="achievement-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="achievement-content">
+                            <h3 class="achievement-title">Ctrl+Space CTF Finals Winners</h3>
+                            <p class="achievement-description">
+                                Won the Ctrl+Space CTF finals at ESTEC (3S Conference). Our team won the KoTH and the Jeopardy-style challenges to become overall champions.
+                            </p>
+                            <div class="achievement-meta">
+                                <span class="achievement-date">2025</span>
+                                <span class="achievement-category">Finals Winners</span>
                             </div>
                         </div>
                     </a>
@@ -441,6 +394,43 @@
                         </a>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blogs Section -->
+    <section id="blogs" class="blogs">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="command-prompt">$ cat /var/log/blogs</span>
+                </h2>
+            </div>
+
+            <div class="blog-grid">
+                <article class="blog-card featured">
+                    <div class="blog-header">
+                        <div class="blog-category">CVE Research</div>
+                        <div class="blog-date">2024</div>
+                    </div>
+                    <div class="blog-content">
+                        <h2 class="blog-title">
+                            <a href="blogs/CVE_2024_51362.html">CVE-2024-51362 Discovery</a>
+                        </h2>
+                        <p class="blog-excerpt">A writeup on a smart-camera vulnerability (CVE-2024-51362) that demonstrates common insecure defaults in embedded devices.</p>
+                    </div>
+                </article>
+
+                <article class="blog-card">
+                    <div class="blog-header">
+                        <div class="blog-category">Index</div>
+                        <div class="blog-date">All posts</div>
+                    </div>
+                    <div class="blog-content">
+                        <h3 class="blog-title"><a href="blogs.html">View all blog posts</a></h3>
+                        <p class="blog-excerpt">Browse full-length posts, research notes and CVE writeups on the blog index.</p>
+                    </div>
+                </article>
             </div>
         </div>
     </section>
